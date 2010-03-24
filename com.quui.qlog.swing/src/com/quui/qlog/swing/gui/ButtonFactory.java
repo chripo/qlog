@@ -20,6 +20,7 @@ public class ButtonFactory
 	public static final int SAVE_LOG = 6;
 	public static final int CHANGE_FONTSIZE = 7;
 	public static final int SCROLL_LOCK = 8;
+	public static final int REMOVE_ALL_TABS = 9;
 
 	public static JMenuItem create(int id, ActionListener listener)
 	{
@@ -55,6 +56,10 @@ public class ButtonFactory
 			 item = buildItem(id, "Scroll Lock", KeyEvent.VK_L, "L", "scrollLock",
 					listener);
 			 break;
+		case REMOVE_ALL_TABS:
+			item = buildItem(id, "Remove All Tabs", KeyEvent.VK_R, "R", "remtabs",
+					listener);				
+			break;
 		default:
 			System.out.println("No Button available for id " + id);
 		}

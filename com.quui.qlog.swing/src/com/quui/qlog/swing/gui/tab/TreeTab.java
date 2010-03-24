@@ -127,10 +127,6 @@ public class TreeTab implements ITreeTab {
 		return _name;
 	}
 
-	public Icon getIcon() {
-		return new CloseTabIcon();
-	}
-
 	public void setScrollLock(boolean lock) {
 	}
 

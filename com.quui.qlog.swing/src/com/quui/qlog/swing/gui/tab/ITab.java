@@ -1,6 +1,5 @@
 package com.quui.qlog.swing.gui.tab;
 
-import javax.swing.Icon;
 import javax.swing.JScrollPane;
 
 public interface ITab
@@ -16,8 +15,6 @@ public interface ITab
 	public JScrollPane getTabComponent();
 	
 	public String getName();
-	
-	public Icon getIcon();
 	
 	public void setScrollLock(boolean lock);
 	

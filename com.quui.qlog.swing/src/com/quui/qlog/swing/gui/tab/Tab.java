@@ -116,10 +116,6 @@ public class Tab implements ITab {
 		return _name;
 	}
 
-	public Icon getIcon() {
-		return new CloseTabIcon();
-	}
-
 	public TableBuilder getTableBuilder() {
 		return _tableBuilder;
 	}

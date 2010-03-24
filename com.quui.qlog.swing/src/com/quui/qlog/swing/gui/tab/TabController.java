@@ -2,13 +2,12 @@ package com.quui.qlog.swing.gui.tab;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Rectangle;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -16,18 +15,14 @@ import javax.swing.event.ChangeListener;
 import com.quui.utils.event.Distributor;
 
 
-public class TabController extends Distributor implements MouseListener, ChangeListener {
+public class TabController extends Distributor implements ActionListener, ChangeListener {
 	private JTabbedPane _tabPane;
 	private List<ITab> _tabList;
-
-	int[] _keys = { KeyEvent.VK_0, KeyEvent.VK_1, KeyEvent.VK_2, KeyEvent.VK_3, KeyEvent.VK_4,
-			KeyEvent.VK_5, KeyEvent.VK_6, KeyEvent.VK_7, KeyEvent.VK_8, KeyEvent.VK_9, };
-
+			
 	public TabController() {
 		_tabList = new ArrayList<ITab>();
 		_tabPane = new JTabbedPane();
 		_tabPane.setOpaque(true);
-		_tabPane.addMouseListener(this);
 		_tabPane.addChangeListener(this);
 	}
 
@@ -35,37 +30,60 @@ public class TabController extends Distributor implements MouseListener, ChangeL
 		return _tabPane;
 	}
 
-	public void addTab(ITab tab) {
+	public synchronized void addTab(ITab tab) {
 		_tabList.add(tab);
-		_tabPane.addTab(tab.getName(), tab.getIcon(), tab.getTabComponent());
-		int index = _tabList.size() - 1;
-		_tabPane.setMnemonicAt(index, _keys[index]);
-		_tabPane.setSelectedComponent(tab.getTabComponent());
+		int idx = _tabList.size() - 1;
+		
+		_tabPane.addTab(tab.getName(), tab.getTabComponent());
+		TabBtnComp btn = new TabBtnComp(tab.getName());
+		btn.addActionListener(this);
+		_tabPane.setTabComponentAt(idx, btn);
+				
+		if(idx <= 9)
+			_tabPane.setMnemonicAt(idx,  48 + ((idx+1)%10));
+		
+		if(idx == 0)
+			_tabPane.setSelectedIndex(idx);
+	}
+	
+	public synchronized void removeAllTabs() {
+		for (ITab t : _tabList) 
+			t.close();
+		_tabList.clear();
+		_tabPane.removeAll();
 	}
 
-	private void removeTab(ITab tab, int tabNumber) {
-		_tabList.remove(tab);
-		_tabPane.removeTabAt(tabNumber);
+	private synchronized void removeTab(int idx) {
+		if(idx < 0 || idx >=  _tabList.size())
+			return;
+		
+		ITab tab = _tabList.get(idx);
+		_tabList.remove(idx);
+		TabBtnComp btn = (TabBtnComp)_tabPane.getTabComponentAt(idx);
+		btn.removeActionListener(this);
+		
+		_tabPane.removeTabAt(idx);
 		tab.close();
-
-		for (int i = 0; i < _tabPane.getTabCount(); i++)
-			_tabPane.setMnemonicAt(i, _keys[i]);
+		
+		idx = _tabPane.getTabCount() > 10 ? 10 : _tabPane.getTabCount();
+		for (int i = 0; i < idx; i++)
+			_tabPane.setMnemonicAt(i, 48 + ((i+1)%10));
 	}
 
-	public ITab getCurrentTab() {
+	public synchronized ITab getCurrentTab() {		
 		return getTabForComponent(_tabPane.getSelectedComponent());
 	}
 
-	private int getTabIndex(ITab tab) {
-		for (int i = 0; i < _tabList.size(); i++) {
-			if (_tabList.get(i).equals(tab)) {
-				return i;
-			}
-		}
+	private synchronized int getTabIndex(ITab tab) {
+		int len = _tabList.size();
+		for (int i = 0; i < len ; i++)
+			if (_tabList.get(i).equals(tab))
+				return i;			
+		
 		return -1;
 	}
 
-	public ITab getTabForName(String name) {
+	public synchronized  ITab getTabForName(String name) {
 		for (ITab t : _tabList) {
 			if (t.getName().equals(name)) {
 				return t;
@@ -74,7 +92,7 @@ public class TabController extends Distributor implements MouseListener, ChangeL
 		return null;
 	}
 
-	private ITab getTabForComponent(Component c) {
+	private synchronized  ITab getTabForComponent(Component c) {
 		for (ITab t : _tabList) {
 			if (t.getTabComponent().equals(c)) {
 				return t;
@@ -83,7 +101,7 @@ public class TabController extends Distributor implements MouseListener, ChangeL
 		return null;
 	}
 
-	public void stateChanged(ChangeEvent e) {
+	public synchronized void stateChanged(ChangeEvent e) {
 		int index = _tabPane.getSelectedIndex();
 		if (index != -1)
 			_tabPane.setBackgroundAt(index, Color.LIGHT_GRAY);
@@ -91,39 +109,18 @@ public class TabController extends Distributor implements MouseListener, ChangeL
 		distribute(new TabControllerEvent(this, TabControllerEvent.Tab.TAB_CHANGED));
 	}
 
-	public void mouseClicked(MouseEvent e) {
-		int tabNumber = _tabPane.getUI().tabForCoordinate(_tabPane, e.getX(), e.getY());
-		if (tabNumber < 0)
-			return;
-		Rectangle rect = ((CloseTabIcon) _tabPane.getIconAt(tabNumber)).getBounds();
-		if (rect.contains(e.getX(), e.getY())) {
-			Component c = _tabPane.getComponentAt(tabNumber);
-			ITab tab = getTabForComponent(c);
-			removeTab(tab, tabNumber);
-		}
-	}
-
-	public void mouseEntered(MouseEvent e) {
-	}
-
-	public void mouseExited(MouseEvent e) {
-	}
-
-	public void mousePressed(MouseEvent e) {
-	}
-
-	public void mouseReleased(MouseEvent e) {
-	}
-
-	public List<ITab> getTabList() {
+	public synchronized List<ITab> getTabList() {
 		return _tabList;
 	}
 
-	public void notifyAboutIncomingMsg(String source) {
+	public synchronized void notifyAboutIncomingMsg(String source) {
 		ITab t = getTabForName(source);
 		int index = getTabIndex(t);
-		if (!getCurrentTab().equals(t)) {
-			_tabPane.setBackgroundAt(index, Color.GRAY);
-		}
+		if (!getCurrentTab().equals(t))
+			_tabPane.setBackgroundAt(index, Color.GRAY);		
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		removeTab(_tabPane.indexOfTabComponent(((JButton)e.getSource()).getParent())); 		
 	}
 }

@@ -9,7 +9,7 @@ public class QLogDataTransformerFactory implements IDataTransformerFactory{
 	/**
 	 * {@inheritDoc}
 	 */
-	public IDataTransformer create() {
+	public synchronized IDataTransformer create() {
 		return new QLogDataTransformer(new SwingMediator());
 	}
 

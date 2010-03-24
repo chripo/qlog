@@ -125,6 +125,7 @@ public class Window extends JFrame implements ActionListener, IListener {
 		JMenuItem clearOnConnect = menu.add(ButtonFactory.create(ButtonFactory.CLEAR_ON_CONNECT,
 				this));
 		menu.add(ButtonFactory.create(ButtonFactory.FILTER, this));
+		menu.add(ButtonFactory.create(ButtonFactory.REMOVE_ALL_TABS, this));
 		JMenuItem alwaysOnTop = window.add(ButtonFactory.create(ButtonFactory.ALWAYS_ON_TOP, this));
 		window.add(ButtonFactory.create(ButtonFactory.SAVE_LOG, this));
 		window.add(ButtonFactory.create(ButtonFactory.CHANGE_FONTSIZE, this));
@@ -180,6 +181,8 @@ public class Window extends JFrame implements ActionListener, IListener {
 				new FilterPopUp(this, _tabCtrl.getCurrentTab());
 			else
 				MessagePane.createTabErrorDialog(this);
+		} else if( evt.getActionCommand().equals("remtabs") ){
+			_tabCtrl.removeAllTabs();		
 		}
 	}
 
