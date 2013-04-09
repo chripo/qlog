@@ -19,7 +19,7 @@ import com.quui.qlog.swing.gui.tab.ITab;
 
 public class FontSizePopUp implements ActionListener, IPopUp, KeyListener
 {
-	private static int _fontSize = 12;
+	private static int _fontSize = 16;
 
 	public static void setFontSize(int fontSize)
 	{

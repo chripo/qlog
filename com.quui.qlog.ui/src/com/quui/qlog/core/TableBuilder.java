@@ -8,17 +8,21 @@ public class TableBuilder
 {
 	private String _filter = "";
 	private String _content = "";
-	private int _fontSize;
+	private float _fontSize;
 	private String _css;
-	private int _initialFontSize;
+	final private float _initialFontSize;
 
 	public TableBuilder(int fontSize)
 	{
 		// The only Swing-related dependency was here: FontSizePopUp.getFontSize();
 		// Replaced by a constructor taking the size
-		_initialFontSize = _fontSize = fontSize;
-		_css = "<style type='text/css'>table { width:100%; font-family: arial, sans-serif; font-size:" + _fontSize + "px; }</style>";
+		_initialFontSize = _fontSize = toEm(fontSize);
+		_css = "<style type='text/css'>p { margin: 0; padding: 3px 0px; width:100%; font-family: Arial, 'Open Sans', sans-serif, monospace; font-size:" + _fontSize + "em; }</style>";
 		_content =  _css;
+	}
+
+	static private float toEm(int px) {
+		return Math.round( (((float)px) / 16.0f) * 10000) / 10000.0f;
 	}
 
 	public void setFilter(String filter)
@@ -28,16 +32,16 @@ public class TableBuilder
 
 	public void changeFontSize(int fontSize)
 	{
+		final float s = toEm(fontSize);
 		_content = _content.replaceAll(
-				"font-size:" + _fontSize + "px;",
-				"font-size:" + fontSize + "px;");
-		_fontSize = fontSize;
+				"font-size:" + _fontSize + "em;",
+				"font-size:" + s + "em;");
+		_fontSize = s;
 	}
 
 	public String wrap(String message, String color)
 	{
-		return "<table><tr><td bgcolor='" + color + "'>" + message
-		+ "</td></tr></table>";
+		return "<p style='background-color:" + color + "'>" + message + "</p>";
 	}
 
 	public String buildHTML(String color, String message)
@@ -51,7 +55,7 @@ public class TableBuilder
 		return newMsg;
 	}
 
-	private String validateColor(String color)
+	static String validateColor(String color)
 	{
 		if (color.equals(null))
 			color = "#ffffff";
@@ -81,7 +85,7 @@ public class TableBuilder
 	public void clear()
 	{
 		_content =  _css;
-		int newFontSize = _fontSize;
+		int newFontSize = (int)(_fontSize * 16);
 		_fontSize = _initialFontSize;
 		changeFontSize(newFontSize);
 	}
@@ -99,7 +103,7 @@ public class TableBuilder
 	public String getCss()
 	{
 		return _css.replaceAll(
-				"font-size:" + _initialFontSize + "px;",
-				"font-size:" + _fontSize + "px;");
+				"font-size:" + _initialFontSize + "em;",
+				"font-size:" + _fontSize + "em;");
 	}
 }
