@@ -192,10 +192,16 @@ public class Window extends JFrame implements ActionListener, IListener {
 			_tabCtrl.removeAllTabs();
 			break;
 
-		case CLEAR_ON_CONNECT:
 		case ALWAYS_ON_TOP:
-		case SCROLL_LOCK:
 			handleAlwaysOnTop((JMenuItem) evt.getSource());
+			break;
+
+		case CLEAR_ON_CONNECT:
+			handleClearOnConnect((JMenuItem) evt.getSource());
+			break;
+
+		case SCROLL_LOCK:
+			handleScrollLock((JMenuItem) evt.getSource());
 			break;
 		}
 	}
