@@ -2,7 +2,6 @@ package com.quui.qlog.swing.gui.tab;
 
 import java.awt.Font;
 
-import javax.swing.Icon;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;

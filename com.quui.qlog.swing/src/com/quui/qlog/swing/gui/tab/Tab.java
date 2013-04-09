@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.io.IOException;
 import java.io.StringReader;
 
-import javax.swing.Icon;
 import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
 import javax.swing.text.BadLocationException;
