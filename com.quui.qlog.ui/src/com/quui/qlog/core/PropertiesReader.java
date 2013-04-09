@@ -19,57 +19,83 @@ public class PropertiesReader {
 		try {
 			readFile();
 		} catch (Exception e) {
-			System.out.println("Exeption with PropertiesReader.");
-			e.printStackTrace();
+			System.err.println("Error: fail to parse config file: " + _path);
 		}
 	}
 
 	private void readFile() throws Exception {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = factory.newDocumentBuilder();
+		final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		final DocumentBuilder builder = factory.newDocumentBuilder();
 		_document = builder.parse(new File(_path));
 	}
 
 	public String getIp() {
-		return _document.getElementsByTagName("ip").item(0).getTextContent();
+		try {
+			return _document.getElementsByTagName("ip").item(0).getTextContent();
+		} catch (Exception e) {}
+		return "127.0.0.1";
 	}
 
 	public int getPort() {
-		return Integer.parseInt(_document.getElementsByTagName("port").item(0).getTextContent());
+		try {
+			return Integer.parseInt(_document.getElementsByTagName("port").item(0).getTextContent());
+		} catch (Exception e) {}
+		return 6666;
 	}
 
 	public int getX() {
-		return Integer.parseInt(_document.getElementsByTagName("x").item(0).getTextContent());
+		try {
+			return Integer.parseInt(_document.getElementsByTagName("x").item(0).getTextContent());
+		} catch (Exception e) {}
+		return 0;
 	}
 
 	public int getY() {
-		return Integer.parseInt(_document.getElementsByTagName("y").item(0).getTextContent());
+		try {
+			return Integer.parseInt(_document.getElementsByTagName("y").item(0).getTextContent());
+		} catch (Exception e) {}
+		return 0;
 	}
 
 	public int getWidth() {
-		return Integer.parseInt(_document.getElementsByTagName("width").item(0).getTextContent());
+		try {
+			return Integer.parseInt(_document.getElementsByTagName("width").item(0).getTextContent());
+		} catch (Exception e) {}
+		return 800;
 	}
 
 	public int getHeight() {
-		return Integer.parseInt(_document.getElementsByTagName("height").item(0).getTextContent());
+		try {
+			return Integer.parseInt(_document.getElementsByTagName("height").item(0).getTextContent());
+		} catch (Exception e) {}
+		return 600;
 	}
 
 	public boolean getAlwaysOnTop() {
-		return _document.getElementsByTagName("alwaysontop").item(0).getTextContent()
-				.equals("true");
+		try {
+			return _document.getElementsByTagName("alwaysontop").item(0).getTextContent().equals("true");
+		} catch (Exception e) {}
+		return false;
 	}
 
 	public boolean getClearOnConnect() {
-		return _document.getElementsByTagName("clearonconnect").item(0).getTextContent().equals(
-				"true");
+		try {
+			return _document.getElementsByTagName("clearonconnect").item(0).getTextContent().equals("true");
+		} catch (Exception e) {}
+		return true;
 	}
 
 	public int getFontSize() {
-		return Integer
-				.parseInt(_document.getElementsByTagName("fontsize").item(0).getTextContent());
+		try {
+			return Integer.parseInt(_document.getElementsByTagName("fontsize").item(0).getTextContent());
+		} catch (Exception e) {}
+		return 16;
 	}
 
 	public boolean getScrollLock() {
-		return _document.getElementsByTagName("scrolllock").item(0).getTextContent().equals("true");
+		try {
+			return _document.getElementsByTagName("scrolllock").item(0).getTextContent().equals("true");
+		} catch (Exception e) {}
+		return true;
 	}
 }
