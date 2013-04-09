@@ -1,2 +1,4 @@
 *.class
 com.quui.qlog.swing/deploy/*
+config.xml
+bin
