@@ -5,7 +5,7 @@ import com.quui.server.IDataTransformer;
 import com.quui.server.IDataTransformerFactory;
 
 public class QLogDataTransformerFactory implements IDataTransformerFactory{
-	
+
 	/**
 	 * {@inheritDoc}
 	 */

@@ -51,7 +51,7 @@ public class FilterPopUp implements ActionListener, IPopUp, WindowListener, KeyL
 
 		_parent.addPopUp(this);
 	}
-	
+
 	public void actionPerformed(ActionEvent e)
 	{
 		_currentTab.applyFilter(_tf.getText());
@@ -108,12 +108,12 @@ public class FilterPopUp implements ActionListener, IPopUp, WindowListener, KeyL
 	public void keyReleased(KeyEvent arg0)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void keyTyped(KeyEvent arg0)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 }

@@ -6,7 +6,7 @@ import java.util.Vector;
 
 /**
  * The <code>IDistributor</code> default implementation
- * 
+ *
  * @author maxmc
  */
 public class Distributor implements IDistributor {

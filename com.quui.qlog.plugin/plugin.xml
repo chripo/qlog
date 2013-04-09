@@ -2,40 +2,40 @@
 <?eclipse version="3.2"?>
 <plugin>
 
-   <extension
-         point="org.eclipse.ui.views">
-      <category
-            name="Quui"
-            id="com.quui.qlog.plugin">
-      </category>
-      <!--
-      <view
-            name="qLogHTML"
-            icon="icons/icon16x16.gif"
-            category="com.quui.qlog.plugin"
-            class="com.quui.qlog.plugin.views.html.QuuiLogView"
-            id="com.quui.qlog.plugin.views.QLogView">
-      </view>
-      -->
-      <view
-            category="com.quui.qlog.plugin"
-            class="com.quui.qlog.plugin.views.QuuiLogTableView"
-            icon="icons/category.gif"
-            id="com.quui.qlog.plugin.views.QuuiLogTableView"
-            name="Quui Log">
-      </view>
-   </extension>
-   <extension
-         point="org.eclipse.ui.perspectiveExtensions">
-      <perspectiveExtension
-            targetID="org.eclipse.ui.resourcePerspective">
-         <view
-               ratio="0.5"
-               relative="org.eclipse.ui.views.TaskList"
-               relationship="right"
-               id="com.quui.qlog.plugin.views.QLogView">
-         </view>
-      </perspectiveExtension>
-   </extension>
+<extension
+		 point="org.eclipse.ui.views">
+	  <category
+			name="Quui"
+			id="com.quui.qlog.plugin">
+	  </category>
+	  <!--
+	  <view
+			name="qLogHTML"
+			icon="icons/icon16x16.gif"
+			category="com.quui.qlog.plugin"
+			class="com.quui.qlog.plugin.views.html.QuuiLogView"
+			id="com.quui.qlog.plugin.views.QLogView">
+	  </view>
+	  -->
+	  <view
+			category="com.quui.qlog.plugin"
+			class="com.quui.qlog.plugin.views.QuuiLogTableView"
+			icon="icons/category.gif"
+			id="com.quui.qlog.plugin.views.QuuiLogTableView"
+			name="Quui Log">
+	  </view>
+</extension>
+<extension
+		 point="org.eclipse.ui.perspectiveExtensions">
+	  <perspectiveExtension
+			targetID="org.eclipse.ui.resourcePerspective">
+		 <view
+			   ratio="0.5"
+			   relative="org.eclipse.ui.views.TaskList"
+			   relationship="right"
+			   id="com.quui.qlog.plugin.views.QLogView">
+		 </view>
+	  </perspectiveExtension>
+</extension>
 
 </plugin>

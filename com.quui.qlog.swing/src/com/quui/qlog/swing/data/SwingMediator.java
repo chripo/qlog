@@ -16,14 +16,14 @@ public class SwingMediator implements IGuiMediator {
 
 	public SwingMediator() {
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public void setDataTransformer(IDestroyable dataHandler) {
 		_dataHandler = dataHandler;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -31,28 +31,28 @@ public class SwingMediator implements IGuiMediator {
 		_name = name;
 		createTab();
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public void onMessage(String message, String color) {
 		_tab.incomingMessage(color, message);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public void onCommand(String command) {
 		_tab.incomingCommand(command);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public void onTree(Document doc) {
 		createTreeTab(doc);
 	}
-	
+
 	private void createTab() {
 		_tab = TabFactory.createTab(this, _name);
 		_tab.incomingCommand("clearonconnect");
@@ -63,7 +63,7 @@ public class SwingMediator implements IGuiMediator {
 		ITreeTab tab = TabFactory.createTreeTab(_name + "- Tree");
 		tab.setXmlDoc(doc);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */

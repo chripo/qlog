@@ -148,7 +148,7 @@ public class Window extends JFrame implements ActionListener, IListener {
 
 	/**
 	 * Called if a button is invoked
-	 * 
+	 *
 	 * @param evt
 	 *            carrys information to distinguish which button has been invoked
 	 */

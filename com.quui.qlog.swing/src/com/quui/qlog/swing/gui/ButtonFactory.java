@@ -30,38 +30,38 @@ public class ButtonFactory
 		switch (id)
 		{
 		case ABOUT:
-			 item = buildItem(id, "About", KeyEvent.VK_A, listener);
-			 break;
+			item = buildItem(id, "About", KeyEvent.VK_A, listener);
+			break;
 		case CLEAR:
-			 item = buildItem(id, "Clear", KeyEvent.VK_E, listener);
-			 break;
+			item = buildItem(id, "Clear", KeyEvent.VK_E, listener);
+			break;
 		case CLEAR_ON_CONNECT:
-			 item = buildItem(id, "Clear On Connect", KeyEvent.VK_O, listener);
-			 break;
+			item = buildItem(id, "Clear On Connect", KeyEvent.VK_O, listener);
+			break;
 		case FILTER:
-			 item = buildItem(id, "Filter", KeyEvent.VK_F, listener);
-			 break;
+			item = buildItem(id, "Filter", KeyEvent.VK_F, listener);
+			break;
 		case ALWAYS_ON_TOP:
-			 item = buildItem(id, "Always on top", KeyEvent.VK_T, listener);
-			 break;
+			item = buildItem(id, "Always on top", KeyEvent.VK_T, listener);
+			break;
 		case SAVE_LOG:
-			 item = buildItem(id, "Save Logfile", KeyEvent.VK_S, listener);
-			 break;
+			item = buildItem(id, "Save Logfile", KeyEvent.VK_S, listener);
+			break;
 		case CHANGE_FONTSIZE:
-			 item = buildItem(id, "Change Fontsize", KeyEvent.VK_P, listener);
-			 break;
+			item = buildItem(id, "Change Fontsize", KeyEvent.VK_P, listener);
+			break;
 		case SCROLL_LOCK:
-			 item = buildItem(id, "Scroll Lock", KeyEvent.VK_L, listener);
-			 break;
+			item = buildItem(id, "Scroll Lock", KeyEvent.VK_L, listener);
+			break;
 		case REMOVE_ALL_TABS:
 			item = buildItem(id, "Remove All Tabs", KeyEvent.VK_R, listener);
 			break;
 		default:
 			System.out.println("No Button available for id " + id);
 		}
-		
+
 		if(item != null) _items.add(item);
-		
+
 		return item;
 	}
 

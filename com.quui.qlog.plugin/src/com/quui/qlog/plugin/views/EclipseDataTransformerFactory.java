@@ -10,23 +10,23 @@ import com.quui.server.IDataTransformerFactory;
  * @author Fabian Steeg (fsteeg)
  */
 public final class EclipseDataTransformerFactory implements
-        IDataTransformerFactory {
+		IDataTransformerFactory {
 
-    private IGuiMediator mediator;
+	private IGuiMediator mediator;
 
-    /**
-     * @param mediator The mediator to use with this factory.
-     */
-    public EclipseDataTransformerFactory(final IGuiMediator mediator) {
-        this.mediator = mediator;
-    }
-    // TODO actually, every mediator should have its own client (e.g. a tab)
-    /**
-     * {@inheritDoc}
-     * @see com.quui.server.IDataTransformerFactory#create()
-     */
-    public IDataTransformer create() {
-        return new QLogDataTransformer(mediator);
-    }
+	/**
+	 * @param mediator The mediator to use with this factory.
+	 */
+	public EclipseDataTransformerFactory(final IGuiMediator mediator) {
+		this.mediator = mediator;
+	}
+	// TODO actually, every mediator should have its own client (e.g. a tab)
+	/**
+	 * {@inheritDoc}
+	 * @see com.quui.server.IDataTransformerFactory#create()
+	 */
+	public IDataTransformer create() {
+		return new QLogDataTransformer(mediator);
+	}
 
 }

@@ -2,10 +2,10 @@ package com.quui.utils.event;
 
 /**
  * Basic <code>IEvent</code> implementation
- * 
+ *
  * @see Devent
  * @see IDistributor
- * 
+ *
  * @author Max Kugland
  */
 public class Event implements IEvent {

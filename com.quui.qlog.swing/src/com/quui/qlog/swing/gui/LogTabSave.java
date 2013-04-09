@@ -13,7 +13,7 @@ public class LogTabSave
 {
 	private static final String HEAD = "<!DOCTYPE html PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN' 'http://www.w3.org/TR/html4/loose.dtd'><head><title></title></head><body>";
 	private static final String FOOT = "</body></html>";
-	
+
 	public LogTabSave(Window parent, Tab currentTab)
 	{
 		String filename = currentTab.getName();
@@ -43,7 +43,7 @@ public class LogTabSave
 			content = content.replaceAll("<title>", "<title>QLog - "+filename);
 			content = content.replaceAll("<style[^<]+</style>" , "");
 			content = content.replaceAll("</title>", "</title>"+currentTab.getTableBuilder().getCss());
-			
+
 			new FileSaver(content, fc.getSelectedFile().getAbsolutePath());
 		}
 	}

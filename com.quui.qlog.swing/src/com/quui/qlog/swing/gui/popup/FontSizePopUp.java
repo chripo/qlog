@@ -20,17 +20,17 @@ import com.quui.qlog.swing.gui.tab.ITab;
 public class FontSizePopUp implements ActionListener, IPopUp, KeyListener
 {
 	private static int _fontSize = 12;
-	
+
 	public static void setFontSize(int fontSize)
 	{
 		_fontSize = fontSize;
 	}
-	
+
 	public static int getFontSize()
 	{
 		return _fontSize;
 	}
-	
+
 	private JTextField _tf;
 	private List<ITab> _tabList;
 	private JFrame _frame;
@@ -38,7 +38,7 @@ public class FontSizePopUp implements ActionListener, IPopUp, KeyListener
 	public FontSizePopUp(Window parent, List<ITab> tabList)
 	{
 		_tabList = tabList;
-		
+
 		Dimension size = new Dimension(320, 100);
 		JPanel content = new JPanel();
 
@@ -51,7 +51,7 @@ public class FontSizePopUp implements ActionListener, IPopUp, KeyListener
 		btn.addActionListener(this);
 		_tf.addActionListener(this);
 		_tf.addKeyListener(this);
-		
+
 		content.add(_tf, BorderLayout.NORTH);
 		content.add(btn, BorderLayout.NORTH);
 		content.validate();
@@ -70,16 +70,16 @@ public class FontSizePopUp implements ActionListener, IPopUp, KeyListener
 		{
 			size = _fontSize;
 		}
-		
+
 		for (ITab t : _tabList)
 		{
 			t.changeFontSize(size);
 			t.applyFilter(t.getFilter());
 		}
-		
+
 		_fontSize = size;
 	}
-	
+
 	public void setCurrentTab(ITab currentTab)
 	{
 	}

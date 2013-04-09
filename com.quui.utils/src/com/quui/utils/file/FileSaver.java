@@ -7,9 +7,9 @@ import java.io.IOException;
 
 /**
  * Simply writes a file to disk
- * 
+ *
  * @author maxmc
- * 
+ *
  */
 public class FileSaver {
 	private String _content;

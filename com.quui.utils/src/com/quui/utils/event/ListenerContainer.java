@@ -2,9 +2,9 @@ package com.quui.utils.event;
 
 /**
  * Internal class which stores an <code>IListener</code> for a type
- * 
+ *
  * @author maxmc
- * 
+ *
  */
 public class ListenerContainer {
 	private Enum<? extends IEventType> _type;

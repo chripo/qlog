@@ -45,7 +45,7 @@ public class PropertiesSaver {
 
 	/**
 	 * Recursively process the xml file and inject the resources filesizes
-	 * 
+	 *
 	 * @param element
 	 *            used to traverse the xml tree
 	 */
@@ -76,7 +76,7 @@ public class PropertiesSaver {
 
 	/**
 	 * Wrtite the processed xml document to disk
-	 * 
+	 *
 	 * @param doc
 	 *            the xml document
 	 * @param file

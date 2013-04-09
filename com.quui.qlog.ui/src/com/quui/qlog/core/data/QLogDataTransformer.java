@@ -30,7 +30,7 @@ public class QLogDataTransformer implements IDataTransformer {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -40,7 +40,7 @@ public class QLogDataTransformer implements IDataTransformer {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * Expected data: <log><color>#ff00ff</color><msg>Some log msg</msg></log>
 	 */
 	public void onData(String data) {
@@ -115,7 +115,7 @@ public class QLogDataTransformer implements IDataTransformer {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * Expected data: <login><name>Some name</name></login>
 	 */
 	private void handleLogin(String data) {
@@ -126,12 +126,12 @@ public class QLogDataTransformer implements IDataTransformer {
 		} catch (Exception e) {
 			System.out.println(e.getMessage() + "\r" + e.getStackTrace());
 		}
-		
+
 		_mediator.setDataTransformer(this);
 		_mediator.onLogin(name);
 		_isLoggedIn = true;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */

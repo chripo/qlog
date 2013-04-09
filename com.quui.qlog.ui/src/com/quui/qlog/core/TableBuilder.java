@@ -11,21 +11,21 @@ public class TableBuilder
 	private int _fontSize;
 	private String _css;
 	private int _initialFontSize;
-	
+
 	public TableBuilder(int fontSize)
 	{
-	    // The only Swing-related dependency was here: FontSizePopUp.getFontSize();
-	    // Replaced by a constructor taking the size
+		// The only Swing-related dependency was here: FontSizePopUp.getFontSize();
+		// Replaced by a constructor taking the size
 		_initialFontSize = _fontSize = fontSize;
 		_css = "<style type='text/css'>table { width:100%; font-family: arial, sans-serif; font-size:" + _fontSize + "px; }</style>";
 		_content =  _css;
 	}
-	
+
 	public void setFilter(String filter)
 	{
 		_filter = filter;
 	}
-	
+
 	public void changeFontSize(int fontSize)
 	{
 		_content = _content.replaceAll(
@@ -33,7 +33,7 @@ public class TableBuilder
 				"font-size:" + fontSize + "px;");
 		_fontSize = fontSize;
 	}
-	
+
 	public String wrap(String message, String color)
 	{
 		return "<table><tr><td bgcolor='" + color + "'>" + message
@@ -95,7 +95,7 @@ public class TableBuilder
 	{
 		return _filter;
 	}
-	
+
 	public String getCss()
 	{
 		return _css.replaceAll(

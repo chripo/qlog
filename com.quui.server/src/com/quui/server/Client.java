@@ -77,13 +77,13 @@ public class Client extends Thread implements IClient {
 		if (data.indexOf("policy-file-request") != -1) {
 			send("<?xml version='1.0'?><cross-domain-policy><allow-access-from domain='*' to-ports='*'/></cross-domain-policy>");
 			return true;
-		} 
+		}
 		return false;
 	}
 
 	/**
 	 * send a message to the connected client
-	 * 
+	 *
 	 * @param message
 	 */
 	final public void send(String message) {
@@ -107,7 +107,7 @@ public class Client extends Thread implements IClient {
 		long diff = new Date().getTime() - _connectionTime;
 		return ((diff / 60) / 60);
 	}
-	
+
 	/**
 	 * Shuts down the thread and cleans up used resources
 	 */

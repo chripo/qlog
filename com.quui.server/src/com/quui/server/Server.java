@@ -50,7 +50,7 @@ public class Server implements Runnable {
 
 	/**
 	 * Sends a serialized string to every connected client exept the client with the clientID.
-	 * 
+	 *
 	 * @param clientId
 	 *            the id of the destined client
 	 * @param message
@@ -68,7 +68,7 @@ public class Server implements Runnable {
 
 	/**
 	 * Sends a serialized string to a client specified by clientID
-	 * 
+	 *
 	 * @param clientID
 	 * @param message
 	 */
@@ -81,7 +81,7 @@ public class Server implements Runnable {
 
 	/**
 	 * Sends a serialized string to a client and disconnects the client afterwards
-	 * 
+	 *
 	 * @param clientID
 	 * @param message
 	 */
@@ -97,7 +97,7 @@ public class Server implements Runnable {
 
 	/**
 	 * Pings given client
-	 * 
+	 *
 	 * @param clientID
 	 */
 	protected synchronized void pingClient(String clientID) {
@@ -109,7 +109,7 @@ public class Server implements Runnable {
 
 	/**
 	 * finds a client by its id and returns "null" if no matching client is conntected.
-	 * 
+	 *
 	 * @param username
 	 * @return client
 	 */
@@ -134,7 +134,7 @@ public class Server implements Runnable {
 		}
 		return clientList;
 	}
-	
+
 	protected synchronized void removeClient(Client client) {
 		_clients.remove(client);
 	}

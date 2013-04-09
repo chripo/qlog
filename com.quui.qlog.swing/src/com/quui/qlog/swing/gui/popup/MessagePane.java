@@ -13,7 +13,7 @@ public class MessagePane
 				"To perform this action at least one tab needs to be opened.",
 				"Warning", JOptionPane.WARNING_MESSAGE);
 	}
-	
+
 	public static void createTreeTabErrorDialog(Window parent)
 	{
 		JOptionPane.showMessageDialog(parent,
@@ -27,7 +27,7 @@ public class MessagePane
 				"There is another QLog instance running or the port "+port+" is already in use.",
 				"Error", JOptionPane.ERROR_MESSAGE);
 	}
-	
+
 	public static void createInfoDialog(Window parent)
 	{
 		JOptionPane.showMessageDialog(parent,
