@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
 
 import com.quui.qlog.core.PropertiesReader;
+import com.quui.qlog.core.log4j.Appender;
 import com.quui.qlog.swing.data.QLogDataTransformerFactory;
 import com.quui.qlog.swing.gui.Window;
 import com.quui.qlog.swing.gui.popup.FontSizePopUp;
@@ -20,7 +21,6 @@ import com.quui.qlog.swing.gui.popup.MessagePane;
 import com.quui.qlog.swing.gui.tab.TabFactory;
 import com.quui.qlog.swing.properties.PropertiesSaver;
 import com.quui.server.Server;
-import com.quui.utils.log4j.QLogSocketAppender;
 
 
 public class Application {
@@ -38,11 +38,11 @@ public class Application {
 	}
 
 	private void configureLog4j() {
-		SimpleLayout layout = new SimpleLayout();
-		ConsoleAppender consoleAppender = new ConsoleAppender(layout);
-		QLogSocketAppender qlogAppender = new QLogSocketAppender("localhost", 6666, "QLog");
-		_logger.addAppender(qlogAppender);
-		_logger.addAppender(consoleAppender);
+		if ("true".equals(System.getProperty("DEBUG", "false"))) {
+			final SimpleLayout layout = new SimpleLayout();
+			_logger.addAppender(new ConsoleAppender(layout));
+			_logger.addAppender(new Appender());
+		}
 	}
 
 	private void connectServer(PropertiesReader reader) {
