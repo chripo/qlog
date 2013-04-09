@@ -3,7 +3,7 @@
     <!--this file was created by Eclipse Runnable JAR Export Wizard-->
     <!--ANT 1.7 is required                                        -->
     <target name="create_run_jar">
-        <jar destfile="${basedir}/deploy/org.splink.qlog-1.1.1.jar" filesetmanifest="mergewithoutmain">
+        <jar destfile="${basedir}/deploy/org.splink.qlog-1.2.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Built-By" value="${user.name}"/>
                 <attribute name="Main-Class" value="com.quui.qlog.swing.Application"/>
