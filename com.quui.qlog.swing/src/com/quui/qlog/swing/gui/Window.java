@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 import com.quui.qlog.core.PropertiesReader;
 import com.quui.qlog.swing.gui.ButtonFactory.MenuButton;
@@ -24,6 +25,7 @@ import com.quui.qlog.swing.gui.tab.ITab;
 import com.quui.qlog.swing.gui.tab.Tab;
 import com.quui.qlog.swing.gui.tab.TabController;
 import com.quui.qlog.swing.gui.tab.TabControllerEvent;
+import com.quui.qlog.swing.util.Session;
 import com.quui.utils.event.IEvent;
 import com.quui.utils.event.IListener;
 
@@ -113,6 +115,11 @@ public class Window extends JFrame implements ActionListener, IListener {
 		menu.setMnemonic(KeyEvent.VK_M);
 		menubar.add(menu);
 
+		JMenu session = new JMenu("Session");
+		menubar.add(session);
+		session.add(ButtonFactory.create(MenuButton.SESSION_IMPORT, this));
+		session.add(ButtonFactory.create(MenuButton.SESSION_EXPORT, this));
+
 		JMenu window = new JMenu("Window");
 		window.setMnemonic(KeyEvent.VK_W);
 		menubar.add(window);
@@ -190,6 +197,25 @@ public class Window extends JFrame implements ActionListener, IListener {
 
 		case REMOVE_ALL_TABS:
 			_tabCtrl.removeAllTabs();
+			break;
+
+		case SESSION_IMPORT:
+			try {
+				Session.doimport(this, _tabCtrl);
+			} catch (Exception ex) {
+				JOptionPane.showMessageDialog(this,
+						"Fail to import QLog session",
+						"Import Error", JOptionPane.ERROR_MESSAGE);
+				ex.printStackTrace();
+			}
+			break;
+
+		case SESSION_EXPORT:
+			try {
+				Session.export(this, _tabCtrl.getTabList());
+			} catch (Exception ex) {
+				MessagePane.createTabErrorDialog(this);
+			}
 			break;
 
 		case ALWAYS_ON_TOP:

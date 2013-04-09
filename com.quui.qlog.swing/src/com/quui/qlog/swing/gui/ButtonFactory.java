@@ -21,7 +21,9 @@ public class ButtonFactory
 		SAVE_LOG,
 		CHANGE_FONTSIZE,
 		SCROLL_LOCK,
-		REMOVE_ALL_TABS
+		REMOVE_ALL_TABS,
+		SESSION_EXPORT,
+		SESSION_IMPORT
 	}
 
 	public static JMenuItem create(final MenuButton id, final ActionListener listener)
@@ -55,6 +57,12 @@ public class ButtonFactory
 			break;
 		case REMOVE_ALL_TABS:
 			item = buildItem(id, "Remove All Tabs", KeyEvent.VK_R, listener);
+			break;
+		case SESSION_IMPORT:
+			item = buildItem(id, "Import", KeyEvent.VK_I, listener);
+			break;
+		case SESSION_EXPORT:
+			item = buildItem(id, "Export", KeyEvent.VK_Y, listener);
 			break;
 		default:
 			System.out.println("No Button available for id " + id);
