@@ -29,9 +29,7 @@ public class FilterPopUp implements ActionListener, IPopUp, WindowListener, KeyL
 	{
 		_parent = parent;
 		_currentTab = currentTab;
-		
-		_parent.addPopUp(this);
-		
+
 		Dimension size = new Dimension(320, 100);
 		JPanel content = new JPanel();
 		_tf = new JTextField(currentTab.getFilter());
@@ -50,6 +48,8 @@ public class FilterPopUp implements ActionListener, IPopUp, WindowListener, KeyL
 		_frame = PopUpFactory.createPopup(parent, "Filter", size, content);
 		_frame.addWindowListener(this);
 		_tf.addKeyListener(this);
+
+		_parent.addPopUp(this);
 	}
 	
 	public void actionPerformed(ActionEvent e)

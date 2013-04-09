@@ -11,54 +11,50 @@ import javax.swing.KeyStroke;
 public class ButtonFactory
 {
 	private static final List<JMenuItem> _items = new ArrayList<JMenuItem>();
-	
-	public static final int ABOUT = 1;
-	public static final int CLEAR = 2;
-	public static final int CLEAR_ON_CONNECT = 3;
-	public static final int FILTER = 4;
-	public static final int ALWAYS_ON_TOP = 5;
-	public static final int SAVE_LOG = 6;
-	public static final int CHANGE_FONTSIZE = 7;
-	public static final int SCROLL_LOCK = 8;
-	public static final int REMOVE_ALL_TABS = 9;
 
-	public static JMenuItem create(int id, ActionListener listener)
+	enum MenuButton {
+		ABOUT,
+		CLEAR,
+		CLEAR_ON_CONNECT,
+		FILTER,
+		ALWAYS_ON_TOP,
+		SAVE_LOG,
+		CHANGE_FONTSIZE,
+		SCROLL_LOCK,
+		REMOVE_ALL_TABS
+	}
+
+	public static JMenuItem create(final MenuButton id, final ActionListener listener)
 	{
 		JMenuItem item = null;
 		switch (id)
 		{
 		case ABOUT:
-			 item = buildItem(id, "About", KeyEvent.VK_A, "A", "about", listener);
+			 item = buildItem(id, "About", KeyEvent.VK_A, listener);
 			 break;
 		case CLEAR:
-			 item = buildItem(id, "Clear", KeyEvent.VK_E, "E", "clear", listener);
+			 item = buildItem(id, "Clear", KeyEvent.VK_E, listener);
 			 break;
 		case CLEAR_ON_CONNECT:
-			 item = buildItem(id, "Clear On Connect", KeyEvent.VK_O, "O",
-					"clearonconnect", listener);
+			 item = buildItem(id, "Clear On Connect", KeyEvent.VK_O, listener);
 			 break;
 		case FILTER:
-			 item = buildItem(id, "Filter", KeyEvent.VK_F, "F", "filter", listener);
+			 item = buildItem(id, "Filter", KeyEvent.VK_F, listener);
 			 break;
 		case ALWAYS_ON_TOP:
-			 item = buildItem(id, "Always on top", KeyEvent.VK_T, "T",
-					"alwaysontop", listener);
+			 item = buildItem(id, "Always on top", KeyEvent.VK_T, listener);
 			 break;
 		case SAVE_LOG:
-			 item = buildItem(id, "Save Logfile", KeyEvent.VK_S, "S", "savefile",
-					listener);
+			 item = buildItem(id, "Save Logfile", KeyEvent.VK_S, listener);
 			 break;
 		case CHANGE_FONTSIZE:
-			 item = buildItem(id, "Change Fontsize", KeyEvent.VK_P, "P", "fontsize",
-					listener);
+			 item = buildItem(id, "Change Fontsize", KeyEvent.VK_P, listener);
 			 break;
 		case SCROLL_LOCK:
-			 item = buildItem(id, "Scroll Lock", KeyEvent.VK_L, "L", "scrollLock",
-					listener);
+			 item = buildItem(id, "Scroll Lock", KeyEvent.VK_L, listener);
 			 break;
 		case REMOVE_ALL_TABS:
-			item = buildItem(id, "Remove All Tabs", KeyEvent.VK_R, "R", "remtabs",
-					listener);				
+			item = buildItem(id, "Remove All Tabs", KeyEvent.VK_R, listener);
 			break;
 		default:
 			System.out.println("No Button available for id " + id);
@@ -69,13 +65,13 @@ public class ButtonFactory
 		return item;
 	}
 
-	private static JMenuItem buildItem(int id, String title, int keyEvent, String key,
-			String actionCmd, ActionListener listener)
+	private static JMenuItem buildItem(final MenuButton id, final String title, final int keyEvent,
+			final ActionListener listener)
 	{
 		JMenuItem item = new JMenuItem(title, keyEvent);
 		item.setAccelerator(KeyStroke.getKeyStroke("control "
-				+ key.toUpperCase()));
-		item.setActionCommand(actionCmd);
+				+ String.valueOf(((char)(keyEvent))).toUpperCase()));
+		item.setActionCommand(id.toString());
 		item.addActionListener(listener);
 		item.setName(""+id);
 

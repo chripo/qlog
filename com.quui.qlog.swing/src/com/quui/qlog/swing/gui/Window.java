@@ -15,6 +15,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 import com.quui.qlog.core.PropertiesReader;
+import com.quui.qlog.swing.gui.ButtonFactory.MenuButton;
 import com.quui.qlog.swing.gui.popup.FilterPopUp;
 import com.quui.qlog.swing.gui.popup.FontSizePopUp;
 import com.quui.qlog.swing.gui.popup.IPopUp;
@@ -120,16 +121,16 @@ public class Window extends JFrame implements ActionListener, IListener {
 		help.setMnemonic(KeyEvent.VK_H);
 		menubar.add(help);
 
-		help.add(ButtonFactory.create(ButtonFactory.ABOUT, this));
-		menu.add(ButtonFactory.create(ButtonFactory.CLEAR, this));
-		JMenuItem clearOnConnect = menu.add(ButtonFactory.create(ButtonFactory.CLEAR_ON_CONNECT,
+		help.add(ButtonFactory.create(MenuButton.ABOUT, this));
+		menu.add(ButtonFactory.create(MenuButton.CLEAR, this));
+		JMenuItem clearOnConnect = menu.add(ButtonFactory.create(MenuButton.CLEAR_ON_CONNECT,
 				this));
-		menu.add(ButtonFactory.create(ButtonFactory.FILTER, this));
-		menu.add(ButtonFactory.create(ButtonFactory.REMOVE_ALL_TABS, this));
-		JMenuItem alwaysOnTop = window.add(ButtonFactory.create(ButtonFactory.ALWAYS_ON_TOP, this));
-		window.add(ButtonFactory.create(ButtonFactory.SAVE_LOG, this));
-		window.add(ButtonFactory.create(ButtonFactory.CHANGE_FONTSIZE, this));
-		JMenuItem scrollLock = window.add(ButtonFactory.create(ButtonFactory.SCROLL_LOCK, this));
+		menu.add(ButtonFactory.create(MenuButton.FILTER, this));
+		menu.add(ButtonFactory.create(MenuButton.REMOVE_ALL_TABS, this));
+		JMenuItem alwaysOnTop = window.add(ButtonFactory.create(MenuButton.ALWAYS_ON_TOP, this));
+		window.add(ButtonFactory.create(MenuButton.SAVE_LOG, this));
+		window.add(ButtonFactory.create(MenuButton.CHANGE_FONTSIZE, this));
+		JMenuItem scrollLock = window.add(ButtonFactory.create(MenuButton.SCROLL_LOCK, this));
 		setJMenuBar(menubar);
 
 		if (_clearOnConnect)
@@ -151,38 +152,51 @@ public class Window extends JFrame implements ActionListener, IListener {
 	 * @param evt
 	 *            carrys information to distinguish which button has been invoked
 	 */
-	public void actionPerformed(ActionEvent evt) {
-		if (evt.getActionCommand() == "scrollLock") {
-			handleScrollLock((JMenuItem) evt.getSource());
-		} else if (evt.getActionCommand() == "savefile") {
-			if (_tabCtrl.getCurrentTab() != null) {
-				if (_tabCtrl.getCurrentTab().getClass().equals(Tab.class))
-					new LogTabSave(this, (Tab) _tabCtrl.getCurrentTab());
-				else
-					MessagePane.createTreeTabErrorDialog(this);
-			} else
-				MessagePane.createTabErrorDialog(this);
-		} else if (evt.getActionCommand().equals("clear")) {
-			if (_tabCtrl.getCurrentTab() != null)
-				_tabCtrl.getCurrentTab().clear();
-		} else if (evt.getActionCommand().equals("fontsize")) {
-			if (_tabCtrl.getCurrentTab() != null)
-				new FontSizePopUp(this, _tabCtrl.getTabList());
-			else
-				MessagePane.createTabErrorDialog(this);
-		} else if (evt.getActionCommand().equals("clearonconnect")) {
-			handleClearOnConnect((JMenuItem) evt.getSource());
-		} else if (evt.getActionCommand().equals("alwaysontop")) {
-			handleAlwaysOnTop((JMenuItem) evt.getSource());
-		} else if (evt.getActionCommand().equals("about")) {
+	public void actionPerformed(final ActionEvent evt) {
+		switch (MenuButton.valueOf(evt.getActionCommand())) {
+		case ABOUT:
 			MessagePane.createInfoDialog(this);
-		} else if (evt.getActionCommand().equals("filter")) {
-			if (_tabCtrl.getCurrentTab() != null)
+			break;
+
+		case CLEAR:
+			try {
+				_tabCtrl.getCurrentTab().clear();
+			} catch (Exception ex) {}
+			break;
+
+		case FILTER:
+			try {
 				new FilterPopUp(this, _tabCtrl.getCurrentTab());
-			else
+			} catch (Exception ex) {
 				MessagePane.createTabErrorDialog(this);
-		} else if( evt.getActionCommand().equals("remtabs") ){
-			_tabCtrl.removeAllTabs();		
+			}
+			break;
+
+		case SAVE_LOG:
+			try {
+				new LogTabSave(this, (Tab) _tabCtrl.getCurrentTab());
+			} catch (Exception ex) {
+				MessagePane.createTreeTabErrorDialog(this);
+			}
+			break;
+
+		case CHANGE_FONTSIZE:
+			try {
+				new FontSizePopUp(this, _tabCtrl.getTabList());
+			} catch (Exception ex) {
+				MessagePane.createTabErrorDialog(this);
+			}
+			break;
+
+		case REMOVE_ALL_TABS:
+			_tabCtrl.removeAllTabs();
+			break;
+
+		case CLEAR_ON_CONNECT:
+		case ALWAYS_ON_TOP:
+		case SCROLL_LOCK:
+			handleAlwaysOnTop((JMenuItem) evt.getSource());
+			break;
 		}
 	}
 
