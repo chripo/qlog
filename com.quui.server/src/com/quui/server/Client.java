@@ -66,9 +66,8 @@ public class Client extends Thread implements IClient {
 					_handler.onData(data);
 				}
 			} while (readResult != -1);
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
+		} catch (Exception e) {
+			System.err.println("read error: " + e.getMessage());
 		}
 		destroy();
 	}
@@ -112,13 +111,15 @@ public class Client extends Thread implements IClient {
 	 * Shuts down the thread and cleans up used resources
 	 */
 	public void destroy() {
-		if(running) {
-			System.out.println("shutting down client: "+getClientId());
+		try {
 			running = false;
+			System.out.println("shutting down client: "+getClientId());
 			_server.removeClient(this);
 			_server = null;
+			try { _input.close(); } catch (Exception e) {}
 			_input = null;
+			try { _output.close(); } catch (Exception e) {}
 			_output = null;
-		}
+		} catch (Exception e) {}
 	}
 }

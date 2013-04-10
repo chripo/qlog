@@ -29,14 +29,16 @@ public class FileSaver {
 	}
 
 	private void writeToFile() {
-		File f = new File(_filename);
-
+		BufferedWriter writer = null;
 		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(f));
+			writer = new BufferedWriter(new FileWriter(new File(_filename)));
 			writer.write(_content.toCharArray());
-			writer.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.err.println("fail to write " +  _filename);
+		} finally {
+			try {
+				writer.close();
+			} catch (Exception ex) {}
 		}
 	}
 }

@@ -73,10 +73,9 @@ public class Server implements Runnable {
 	 * @param message
 	 */
 	protected synchronized void sendToClient(String id, String message) {
-		Client client = getClientById(id);
-		if (client != null) {
-			client.send(message);
-		}
+		try {
+			getClientById(id).send(message);
+		} catch (Exception ex) {}
 	}
 
 	/**
@@ -86,13 +85,11 @@ public class Server implements Runnable {
 	 * @param message
 	 */
 	protected synchronized void disconnectClient(String clientID, String message) {
-		Client client = getClientById(clientID);
-		if (client != null) {
-			if (message != null) {
-				client.send(message);
-			}
-			client.destroy();
-		}
+		try {
+			final Client c = getClientById(clientID);
+			c.send(message);
+			c.destroy();
+		} catch (Exception ex) {}
 	}
 
 	/**
@@ -101,10 +98,9 @@ public class Server implements Runnable {
 	 * @param clientID
 	 */
 	protected synchronized void pingClient(String clientID) {
-		Client client = getClientById(clientID);
-		if (client != null) {
-			client.send(Server.PING);
-		}
+		try {
+			getClientById(clientID).send(Server.PING);
+		} catch (Exception e) {}
 	}
 
 	/**
@@ -113,12 +109,11 @@ public class Server implements Runnable {
 	 * @param username
 	 * @return client
 	 */
-	protected synchronized Client getClientById(String id) {
+	protected synchronized Client getClientById(final String id) {
 		for (int i = 0; i < _clients.size(); i++) {
-			Client client = _clients.elementAt(i);
-			if (client.getClientId().equals(id)) {
+			final Client client = _clients.elementAt(i);
+			if (id.equals(client.getClientId()))
 				return client;
-			}
 		}
 		return null;
 	}
@@ -127,7 +122,7 @@ public class Server implements Runnable {
 	 * @return a list of client ids which are currently connected to the server
 	 */
 	protected synchronized Vector<String> getClientIdList() {
-		Vector<String> clientList = new Vector<String>();
+		final Vector<String> clientList = new Vector<String>();
 		for (int i = 0; i < _clients.size(); i++) {
 			Client c = _clients.elementAt(i);
 			clientList.addElement(c.getClientId());
