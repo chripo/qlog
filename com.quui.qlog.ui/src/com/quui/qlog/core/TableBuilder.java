@@ -2,8 +2,6 @@ package com.quui.qlog.core;
 
 import java.util.regex.Pattern;
 
-
-
 public class TableBuilder
 {
 	private String _filter = "";
@@ -12,17 +10,15 @@ public class TableBuilder
 	private String _css;
 	final private float _initialFontSize;
 
-	public TableBuilder(int fontSize)
+	public TableBuilder(final int fontSize)
 	{
-		// The only Swing-related dependency was here: FontSizePopUp.getFontSize();
-		// Replaced by a constructor taking the size
 		_initialFontSize = _fontSize = toEm(fontSize);
 		_css = "<style type='text/css'>p { margin: 0; padding: 3px 0px; width:100%; font-family: Arial, 'Open Sans', sans-serif, monospace; font-size:" + _fontSize + "em; }</style>";
 		_content =  _css;
 	}
 
 	static private float toEm(int px) {
-		return Math.round( (((float)px) / 16.0f) * 10000) / 10000.0f;
+		return (float)((int)( (((float)px) / 16.0f) * 10000)) / 10000.0f;
 	}
 
 	public void setFilter(String filter)
@@ -39,12 +35,12 @@ public class TableBuilder
 		_fontSize = s;
 	}
 
-	public String wrap(String message, String color)
+	static String wrap(final String message, final String color)
 	{
 		return "<p style='background-color:" + color + "'>" + message + "</p>";
 	}
 
-	public String buildHTML(String color, String message)
+	public String buildHTML(final String color, final String message)
 	{
 		String newMsg = wrap(message, validateColor(color))
 				+ System.getProperty("line.separator");
