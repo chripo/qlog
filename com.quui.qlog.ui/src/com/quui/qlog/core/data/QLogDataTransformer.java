@@ -44,8 +44,6 @@ public class QLogDataTransformer implements IDataTransformer {
 	 * Expected data: <log><color>#ff00ff</color><msg>Some log msg</msg></log>
 	 */
 	public void onData(String data) {
-		System.out.println("data: " + data);
-
 		if (_isLoggedIn) {
 			handleData(data);
 		} else {

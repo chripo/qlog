@@ -62,20 +62,15 @@ public class Tab implements ITab {
 		return je;
 	}
 
-	public void incomingCommand(String command) {
-		if (command.equals("clear") && _window.getClearOnConnect()) {
-			_tableBuilder.clear();
-			getEditorPane().setText(_tableBuilder.getContent());
-		} else if (command.equals("clearonconnect") && _window.getClearOnConnect()) {
-			_tableBuilder.clear();
-			getEditorPane().setText(_tableBuilder.getContent());
+	public void incomingCommand(final String command) {
+		if (_window.getClearOnConnect()) {
+			if ("clear".equals(command) || "clearonconnect".equals(command))
+				clear();
 		}
 	}
 
-	public void incomingMessage(String color, String message) {
-		message = message.replace(" ", "&nbsp;");
-
-		String newMsg = _tableBuilder.buildHTML(color, message);
+	public void incomingMessage(final String color, final String message) {
+		final String newMsg = _tableBuilder.buildHTML(color, message.replace(" ", "&nbsp;"));
 		if (newMsg == null)
 			return;
 
@@ -95,7 +90,10 @@ public class Tab implements ITab {
 	}
 
 	public void close() {
-		_client.destroy();
+		try {
+			_client.destroy();
+			_tableBuilder.clear();
+		} catch (Exception ex) {}
 		_reader = null;
 		_client = null;
 		_tableBuilder = null;
@@ -104,7 +102,7 @@ public class Tab implements ITab {
 
 	public void clear() {
 		_tableBuilder.clear();
-		getEditorPane().setText(_tableBuilder.getContent());
+		getEditorPane().setText(_tableBuilder.getCss());
 	}
 
 	public JScrollPane getTabComponent() {
@@ -129,7 +127,7 @@ public class Tab implements ITab {
 
 	public void applyFilter(String filter) {
 		_tableBuilder.setFilter(filter);
-		getEditorPane().setText(Filter.find(filter, _tableBuilder));
+		getEditorPane().setText(Filter.find(_tableBuilder));
 	}
 
 	public void changeFontSize(int size) {

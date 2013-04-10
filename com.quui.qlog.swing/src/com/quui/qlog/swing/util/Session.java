@@ -17,6 +17,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import com.quui.qlog.core.TableBuilder;
 import com.quui.qlog.swing.gui.tab.ITab;
 import com.quui.qlog.swing.gui.tab.Tab;
 import com.quui.qlog.swing.gui.tab.TabController;
@@ -26,13 +27,11 @@ import com.quui.utils.util.IDestroyable;
 
 public class Session {
 
-	static private String STYLE = "<style type='text/css'>"
-+ "/*<![CDATA[*/\n"
+	static String STYLE = "<style type='text/css'>/*<![CDATA[*/\n"
 + " body { background-color: #efefef; }\n"
 + " h1, h2 { color: #333; }\n"
 + " .qtab { border: 1px solid #999; padding: 1em; margin-bottom: 2.6em; background-color: #fff; }\n"
-+ "/*]]>*/\n"
-+ "</style>";
++ "/*]]>*/</style>\n";
 
 	static public void export(final Window wnd, final List<ITab> tabs) {
 
@@ -50,9 +49,13 @@ public class Session {
 								.format(new Date());
 
 			c.insert(0, "<h1>" + filename + "</h1>\n");
-			c.insert(0, "<html>\n<title>" + filename + "</title>\n" + STYLE + "\n<body>\n");
+			c.insert(0, "<body>\n");
+			c.insert(0, TableBuilder.getCss(1.0f) + "\n");
+			c.insert(0, STYLE);
+			c.insert(0, "<title>" + filename + "</title>\n");
+			c.insert(0, "<html>\n");
 			c.insert(0, "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
-			c.append("\n</body>\n</html>\n");
+			c.append("</body>\n</html>");
 
 			final JFileChooser fc = new JFileChooser();
 
@@ -70,7 +73,7 @@ public class Session {
 							JOptionPane.QUESTION_MESSAGE))
 					return;
 
-				new FileSaver(c.substring(0), fc.getSelectedFile().getAbsolutePath());
+				new FileSaver(c.toString(), fc.getSelectedFile().getAbsolutePath());
 			}
 		}
 	}

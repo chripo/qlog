@@ -4,35 +4,24 @@ import java.util.regex.Pattern;
 
 public class TableBuilder
 {
-	private String _filter = "";
-	private String _content = "";
-	private float _fontSize;
-	private String _css;
-	final private float _initialFontSize;
+	private Pattern _filterPttrn;
+	private StringBuilder _content = new StringBuilder("");
+	private float _fontSizeEM;
 
-	public TableBuilder(final int fontSize)
+	public TableBuilder(final int fontSizePX)
 	{
-		_initialFontSize = _fontSize = toEm(fontSize);
-		_css = "<style type='text/css'>p { margin: 0; padding: 3px 0px; width:100%; font-family: Arial, 'Open Sans', sans-serif, monospace; font-size:" + _fontSize + "em; }</style>";
-		_content =  _css;
+		_fontSizeEM = toEm(fontSizePX);
+		setFilter("");
 	}
 
-	static private float toEm(int px) {
+	static private float toEm(int px)
+	{
 		return (float)((int)( (((float)px) / 16.0f) * 10000)) / 10000.0f;
-	}
-
-	public void setFilter(String filter)
-	{
-		_filter = filter;
 	}
 
 	public void changeFontSize(int fontSize)
 	{
-		final float s = toEm(fontSize);
-		_content = _content.replaceAll(
-				"font-size:" + _fontSize + "em;",
-				"font-size:" + s + "em;");
-		_fontSize = s;
+		_fontSizeEM = toEm(fontSize);
 	}
 
 	static String wrap(final String message, final String color)
@@ -42,13 +31,10 @@ public class TableBuilder
 
 	public String buildHTML(final String color, final String message)
 	{
-		String newMsg = wrap(message, validateColor(color))
-				+ System.getProperty("line.separator");
-		_content += newMsg;
+		final String msg = wrap(message, validateColor(color)) + "\n";
+		_content.append(msg);
 
-		if (!filter(newMsg))
-			return null;
-		return newMsg;
+		return isVisible(msg) ? msg : null;
 	}
 
 	static String validateColor(String color)
@@ -62,39 +48,53 @@ public class TableBuilder
 		return color;
 	}
 
-	private boolean filter(String str)
+	public boolean isVisible(final String str)
 	{
-		if (_filter.equals(""))
-			return true;
-		Pattern pattern = Pattern.compile(_filter);
-		if (pattern.matcher(str).find())
-			return true;
-		else
-			return false;
+		try {
+			if ("".equals(_filterPttrn.pattern()))
+				return true;
+			return _filterPttrn.matcher(str).find();
+		} catch (Exception ex) {
+			System.err.println(ex.getMessage());
+		}
+		return true;
 	}
 
 	public void clear()
 	{
-		_content =  _css;
-		int newFontSize = (int)(_fontSize * 16);
-		_fontSize = _initialFontSize;
-		changeFontSize(newFontSize);
+		_content.setLength(0);
 	}
 
 	public String getContent()
 	{
-		return _content;
+		return _content.toString();
+	}
+
+	public void setFilter(final String filter)
+	{
+		_filterPttrn = Pattern.compile(filter);
 	}
 
 	public String getFilter()
 	{
-		return _filter;
+		try {
+			return _filterPttrn.pattern();
+		} catch (Exception ex) {}
+		return "";
 	}
 
 	public String getCss()
 	{
-		return _css.replaceAll(
-				"font-size:" + _initialFontSize + "em;",
-				"font-size:" + _fontSize + "em;");
+		return getCss(_fontSizeEM);
+	}
+
+	static public String getCss(final float fontSizeEM)
+	{
+		return "<style type='text/css'>"
+				+ "p { margin: 0; padding: 3px 0px; width:100%;\n"
+				+ "    font-family: Arial, 'Open Sans', sans-serif, monospace;\n"
+				+ "    font-size:" + fontSizeEM + "em;\n"
+				+ "}"
+				+"</style>\n";
 	}
 }
