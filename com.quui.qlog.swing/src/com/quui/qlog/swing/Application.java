@@ -61,9 +61,11 @@ public class Application {
 	}
 
 	private void saveSettings() {
-		new PropertiesSaver(_config, _window.getSize(), _window.getLocation(),
-				_window.getAlwaysOnTop(), _window.getClearOnConnect(),
-				FontSizePopUp.getFontSize());
+		try {
+			new PropertiesSaver(_config, _window.getSize(), _window.getLocation(),
+					_window.getAlwaysOnTop(), _window.getClearOnConnect(),
+					FontSizePopUp.getFontSize());
+		} catch (Exception ex) {}
 	}
 
 	private Window createWindow(PropertiesReader reader) {
