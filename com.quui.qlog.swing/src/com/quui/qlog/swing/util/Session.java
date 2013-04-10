@@ -1,21 +1,19 @@
 package com.quui.qlog.swing.util;
 
 import java.awt.Window;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileFilter;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 import com.quui.qlog.core.TableBuilder;
 import com.quui.qlog.swing.gui.tab.ITab;
@@ -38,7 +36,7 @@ public class Session {
 		final StringBuilder c = new StringBuilder();
 		for (final ITab t : tabs) {
 			c.append("<h2>" + t.getName() + "</h2>\n");
-			c.append("<div id='" + t.getName() +"' class='qtab'>\n");
+			c.append("<div class='qtab' id='" + t.getName().replace('\'', '"') +"'>\n");
 			c.append( ((Tab)t).getTableBuilder().getContent() );
 			c.append("\n</div>\n");
 		}
@@ -58,10 +56,9 @@ public class Session {
 			c.append("</body>\n</html>");
 
 			final JFileChooser fc = new JFileChooser();
-
 			fc.setDialogTitle("Save Session " + filename);
 			fc.setDialogType(JFileChooser.SAVE_DIALOG);
-			fc.setSelectedFile(new File(filename.replace(' ', '-').toLowerCase() + ".htm"));
+			fc.setSelectedFile(new File(filename.replace(' ', '-').replace(':', '-').toLowerCase() + ".htm"));
 			fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 			if (fc.showOpenDialog(wnd) == JFileChooser.APPROVE_OPTION) {
 
@@ -109,40 +106,46 @@ public class Session {
 
 		private TabController tc;
 		private File file;
+		private Pattern tabStartPttrn;
+		private Pattern msgPttrn;
 
 		public SessionParser(final TabController tc, final File file) {
 			this.tc = tc;
 			this.file = file;
+
+			tabStartPttrn = Pattern.compile("<div\\s+class='qtab'\\s+id='(.*?)'\\s*>");
+			msgPttrn = Pattern.compile("<p\\s*style='background-color:(.{7})'\\s*>((?s).*?)</p>");
 		}
 
 		@Override
 		protected Integer doInBackground() throws Exception {
 			tc.removeAllTabs();
-			final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			final DocumentBuilder builder = factory.newDocumentBuilder();
-			final Document doc = builder.parse(file);
-			doc.getDocumentElement().normalize();
-			final NodeList l = doc.getElementsByTagName("body").item(0).getChildNodes();
-			for (int i=0; i < l.getLength(); ++i ) {
-				try {
-					final Element e = (Element)l.item(i);
-					if (!"qtab".equals(e.getAttribute("class")))
+
+			BufferedReader r = null;
+			try {
+				r = new BufferedReader(new FileReader(file));
+				String line;
+				Matcher tm, mm;
+				ITab tab = null;
+				while ( (line = r.readLine()) !=  null ) {
+					tm = tabStartPttrn.matcher(line);
+					if (tm.matches()) {
+						tab = TabFactory.createTab(new IDestroyable() {
+							public void destroy() {}
+							}, tm.group(1));
+						tab.incomingCommand("clearonconnect");
 						continue;
-					final String id = e.getAttribute("id");
-					final ITab tab = TabFactory.createTab(new IDestroyable() {
-						public void destroy() {}
-					}, id);
-
-					tab.incomingCommand("clearonconnect");
-
-					final NodeList msgs = e.getElementsByTagName("p");
-					for (int j=0; j < msgs.getLength(); ++j) {
-						final Element msg = (Element)msgs.item(j);
-						tab.incomingMessage(msg.getAttribute("style").substring(17),  msg.getTextContent());
 					}
-				} catch (Exception ex) {
-					continue;
+
+					if (tab == null)
+						continue;
+
+					mm = msgPttrn.matcher(line);
+					while (mm.find())
+						tab.incomingMessage(mm.group(1), mm.group(2));
 				}
+			} finally {
+				try { r.close(); } catch (Exception ex) {}
 			}
 			return 0;
 		}
