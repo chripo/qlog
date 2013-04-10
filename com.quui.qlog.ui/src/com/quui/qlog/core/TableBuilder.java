@@ -53,16 +53,11 @@ public class TableBuilder
 
 	static String validateColor(String color)
 	{
-		if (color.equals(null))
-			color = "#ffffff";
+		if (color == null || "".equals(color))
+			return "#ffffff";
 		color = color.replace("0x", "#");
 		if (color.length() < 7)
-		{
-			for (int i = 0; i < (7 - color.length()); i++)
-			{
-				color += "0";
-			}
-		}
+			color += "0000000".substring(0, 7 - color.length());
 
 		return color;
 	}
