@@ -26,7 +26,7 @@ public class TableBuilder
 
 	static String wrap(final String message, final String color)
 	{
-		return "<p style='background-color:" + color + "'>" + message + "</p>";
+		return "<p style='background-color:" + color + "'>" + message.replace("\n", "<br/>") + "</p>";
 	}
 
 	public String buildHTML(final String color, final String message)
