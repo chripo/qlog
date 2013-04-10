@@ -1,13 +1,14 @@
 package com.quui.qlog.core.data;
 
 import java.io.StringReader;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
 import com.quui.server.IClient;
@@ -19,9 +20,11 @@ public class QLogDataTransformer implements IDataTransformer {
 	private boolean _isLoggedIn = false;
 	private IClient _client;
 	private IGuiMediator _mediator;
+	final private Pattern _logPttrn;
 
 	public QLogDataTransformer(IGuiMediator mediator) {
 		_mediator = mediator;
+		_logPttrn = Pattern.compile("<log>\\s*(?:<color>\\s*(.*?)\\s*</color>\\s*)?<(msg|command|tree)>\\s*(?:<!\\[CDATA\\[)?\\s*(.*?)(?:\\]\\]>)?</\\2>\\s*</log>");
 
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		try {
@@ -51,64 +54,27 @@ public class QLogDataTransformer implements IDataTransformer {
 		}
 	}
 
-	private void handleData(String data) {
-		Document doc;
-		try {
-			doc = _builder.parse(new InputSource(new StringReader(data)));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return;
-		}
+	private void handleData(final String data) {
+		final Matcher m = _logPttrn.matcher(data);
+		String type;
+		while (m.find()) {
+			type = m.group(2);
+			if ("msg".equals(type)) {
+				_mediator.onMessage(m.group(3), m.group(1));
 
-		if (doc != null) {
-			String color = getColor(doc);
-			String message = getMessage(doc);
-			String command = getCommand(doc);
-			String tree = getTree(doc);
+			} else if ("command".equals(type)) {
+				_mediator.onCommand(m.group(3));
 
-			if (!command.equals("")) {
-				_mediator.onCommand(command);
-				return;
-			} else if (!color.equals("") && !message.equals("")) {
-				_mediator.onMessage(message, color);
-				return;
-			} else if (!tree.equals("")) {
+			} else if ("tree".equals(type)) {
+				final Document doc;
+				try {
+					doc = _builder.parse(new InputSource(new StringReader(m.group(3))));
+				} catch (Exception e) {
+					continue;
+				}
 				_mediator.onTree(doc);
 			}
 		}
-	}
-
-	private static String getTree(Document doc) {
-		Node item = doc.getElementsByTagName("tree").item(0);
-		if (item != null) {
-			return item.getTextContent();
-		} else
-			return "";
-	}
-
-	private static String getCommand(Document doc) {
-		Node item = doc.getElementsByTagName("command").item(0);
-		if (item != null) {
-			return item.getTextContent();
-		} else
-			return "";
-	}
-
-	private static String getMessage(Document doc) {
-		Node item = doc.getElementsByTagName("msg").item(0);
-		if (item != null) {
-			return item.getTextContent();
-		} else
-			return "";
-
-	}
-
-	private static String getColor(Document doc) {
-		Node item = doc.getElementsByTagName("color").item(0);
-		if (item != null) {
-			return item.getTextContent();
-		} else
-			return "";
 	}
 
 	/**
