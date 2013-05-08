@@ -5,27 +5,24 @@ import java.net.BindException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Date;
 import java.util.Vector;
 
 public class Server implements Runnable {
-	public static String PING = "PING";
 	private Thread _listener;
 	private ServerSocket _server;
 	private Vector<Client> _clients = new Vector<Client>();
-	private int _clientCount = 0;
 	private IDataTransformerFactory _factory;
 
-	public Server(String ip, int port, IDataTransformerFactory factory) throws BindException {
+	public Server(final String host, final int port, final IDataTransformerFactory factory) throws BindException {
 		_factory = factory;
-		startServer(ip, port);
+		startServer(host, port);
 	}
 
-	private void startServer(String ip, int port) throws BindException {
+	protected void startServer(final String host, final int port) throws BindException {
 		try {
-			InetAddress byName = InetAddress.getByName(ip);
-			_server = new ServerSocket(port, 30, byName);
+			_server = new ServerSocket(port, 30, InetAddress.getByName(host));
 			_listener = new Thread(this);
+			_listener.setDaemon(true);
 			_listener.start();
 		} catch (Exception e) {
 			throw new BindException(e.getMessage());
@@ -34,104 +31,29 @@ public class Server implements Runnable {
 
 	public void run() {
 		try {
-			while (!_server.isClosed() && true) {
-				Socket clientSocket = _server.accept();
-				System.out.println("new client: " + _clientCount + " " + clientSocket);
-				_clientCount++;
-				Client c = new Client(this, clientSocket, _factory.create(), _clientCount + "_ID",
-						new Date().getTime());
-				c.start();
-				_clients.addElement(c);
+			while (!_server.isClosed()) {
+				final Socket clientSocket = _server.accept();
+				try {
+					final Client c = new Client(this, clientSocket, _factory.create());
+					c.start();
+					_clients.addElement(c);
+					System.out.println("client connected: " + clientSocket + " count: " + _clients.size());
+				} catch (Exception ce) {
+					System.err.println("fail to setup client: " + ce.getMessage());
+					try { clientSocket.close(); } catch (Exception e) {}
+				}
 			}
 		} catch (Exception e) {
 			System.err.println("While running, caught exception: " + e.getMessage());
 		}
+
+		destroy();
 	}
 
-	/**
-	 * Sends a serialized string to every connected client exept the client with the clientID.
-	 *
-	 * @param clientId
-	 *            the id of the destined client
-	 * @param message
-	 *            the message for the destined client to receive
-	 */
-	protected synchronized void broadcast(String clientId, String message) {
-		Client client;
-		for (int i = 0; i < _clients.size(); i++) {
-			client = _clients.elementAt(i);
-			if (!client.getClientId().equals(clientId)) {
-				client.send(message);
-			}
-		}
-	}
-
-	/**
-	 * Sends a serialized string to a client specified by clientID
-	 *
-	 * @param clientID
-	 * @param message
-	 */
-	protected synchronized void sendToClient(String id, String message) {
+	protected void removeClient(final Client client) {
 		try {
-			getClientById(id).send(message);
-		} catch (Exception ex) {}
-	}
-
-	/**
-	 * Sends a serialized string to a client and disconnects the client afterwards
-	 *
-	 * @param clientID
-	 * @param message
-	 */
-	protected synchronized void disconnectClient(String clientID, String message) {
-		try {
-			final Client c = getClientById(clientID);
-			c.send(message);
-			c.destroy();
-		} catch (Exception ex) {}
-	}
-
-	/**
-	 * Pings given client
-	 *
-	 * @param clientID
-	 */
-	protected synchronized void pingClient(String clientID) {
-		try {
-			getClientById(clientID).send(Server.PING);
+			_clients.remove(client);
 		} catch (Exception e) {}
-	}
-
-	/**
-	 * finds a client by its id and returns "null" if no matching client is conntected.
-	 *
-	 * @param username
-	 * @return client
-	 */
-	protected synchronized Client getClientById(final String id) {
-		for (int i = 0; i < _clients.size(); i++) {
-			final Client client = _clients.elementAt(i);
-			if (id.equals(client.getClientId()))
-				return client;
-		}
-		return null;
-	}
-
-	/**
-	 * @return a list of client ids which are currently connected to the server
-	 */
-	protected synchronized Vector<String> getClientIdList() {
-		final Vector<String> clientList = new Vector<String>();
-		for (int i = 0; i < _clients.size(); i++) {
-			Client c = _clients.elementAt(i);
-			clientList.addElement(c.getClientId());
-		}
-		return clientList;
-	}
-
-	protected synchronized void removeClient(Client client) {
-		_clients.remove(client);
 	}
 
 	/**

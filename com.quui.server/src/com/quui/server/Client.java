@@ -1,82 +1,67 @@
 package com.quui.server;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Date;
+import java.util.Scanner;
 
 public class Client extends Thread implements IClient {
-	final public static String PONG = "PONG";
-	final public static String UTF8 = "UTF8";
-
-	protected volatile boolean running = true;
-
-	private BufferedReader _input;
-	private PrintWriter _output;
-	private String _id;
-	private long _connectionTime;
-	protected IDataTransformer _handler;
-	protected Server _server;
-
-	public Client(Server server, Socket socket, IDataTransformer handler, String id,
-			long connectionTime) {
-		_server = server;
-		_id = id;
-		_handler = handler;
-		_handler.setClient(this);
-		_connectionTime = connectionTime;
-
-		try {
-			initialize(socket);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
+	interface CONST {
+		String UTF8 = "UTF-8";
+		String DELIMITER = "\u0000";
 	}
 
-	private void initialize(Socket socket) throws IOException {
-		_input = new BufferedReader(new InputStreamReader(socket.getInputStream(), UTF8));
-		_output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), UTF8));
+	final private String _id;
+	final private long _connectionTime;
+	private Scanner _input;
+	private PrintWriter _output;
+	protected IDataTransformer _handler;
+	protected Server _server;
+	private Socket _socket;
+
+	public Client(final Server server, final Socket socket, final IDataTransformer handler) throws IOException {
+		_id = socket.getPort() + "_ID";
+		_connectionTime = new Date().getTime();
+		_server = server;
+		_handler = handler;
+		_handler.setClient(this);
+		_socket = socket;
+
+		initialize(socket);
+	}
+
+	protected void initialize(final Socket socket) throws IOException {
+		_input = new Scanner(new InputStreamReader(socket.getInputStream(), CONST.UTF8));
+		_input.useDelimiter(CONST.DELIMITER);
+		_output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), CONST.UTF8));
 	}
 
 	final public void run() {
-		if (!running) {
-			return;
-		}
-
-		char buffer[] = new char[1];
-		int readResult = -1;
-
 		try {
-			do {
-				String data = "";
-				do {
-					readResult = _input.read(buffer, 0, 1);
-					data += buffer[0];
-				} while ((buffer[0] != 0) && (readResult != -1));
+			while (true) {
+				final String data = _input.next();
 
-				if (readResult != -1) {
-					data = data.replace("\u0000", "");
+				if (handleFlashSecurity(data))
+					continue;
 
-					if(handleFlashSecurity(data)) {
-						continue;
-					}
-					_handler.onData(data);
-				}
-			} while (readResult != -1);
+				_handler.onData(data);
+			}
 		} catch (Exception e) {
-			System.err.println("read error: " + e.getMessage());
+			System.err.println(getClientId() + " read error: " + e.getMessage());
 		}
 		destroy();
 	}
 
-	private boolean handleFlashSecurity(String data) {
-		if (data.indexOf("policy-file-request") != -1) {
-			send("<?xml version='1.0'?><cross-domain-policy><allow-access-from domain='*' to-ports='*'/></cross-domain-policy>");
-			return true;
-		}
+	private boolean handleFlashSecurity(final String data) {
+		try {
+			if (data.startsWith("<policy-file-request")) {
+				send("<?xml version='1.0'?><cross-domain-policy><allow-access-from domain='*' to-ports='*'/></cross-domain-policy>");
+				return true;
+			}
+		} catch (Exception e) {}
 		return false;
 	}
 
@@ -85,13 +70,12 @@ public class Client extends Thread implements IClient {
 	 *
 	 * @param message
 	 */
-	final public void send(String message) {
+	final public void send(final String message) {
 		try {
-			_output.print(message + '\u0000');
+			_output.print(message + CONST.DELIMITER);
 			_output.flush();
 		} catch (Exception e) {
-			System.out.println("Client.send exeption " + e.getMessage());
-			e.printStackTrace();
+			System.err.println("Client [" + getClientId() + "] send exeption: " + e.getMessage());
 		}
 	}
 
@@ -103,7 +87,7 @@ public class Client extends Thread implements IClient {
 	 * @return the time this client is connected to the server measured in seconds
 	 */
 	final public long getConnectionTime() {
-		long diff = new Date().getTime() - _connectionTime;
+		final long diff = new Date().getTime() - _connectionTime;
 		return ((diff / 60) / 60);
 	}
 
@@ -112,14 +96,15 @@ public class Client extends Thread implements IClient {
 	 */
 	public void destroy() {
 		try {
-			running = false;
-			System.out.println("shutting down client: "+getClientId());
+			System.out.println("shutting down client: " + getClientId());
+			try { _socket.close(); }  catch (Exception e) {}
+			try { _input.close(); } catch (Exception e) {}
+			try { _output.close(); } catch (Exception e) {}
+			_input = null;
+			_output = null;
+			_socket = null;
 			_server.removeClient(this);
 			_server = null;
-			try { _input.close(); } catch (Exception e) {}
-			_input = null;
-			try { _output.close(); } catch (Exception e) {}
-			_output = null;
 		} catch (Exception e) {}
 	}
 }
