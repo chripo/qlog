@@ -24,7 +24,7 @@ public class QLogDataTransformer implements IDataTransformer {
 
 	public QLogDataTransformer(IGuiMediator mediator) {
 		_mediator = mediator;
-		_logPttrn = Pattern.compile("<log>\\s*(?:<color>\\s*(.*?)\\s*</color>\\s*)?<(msg|command|tree)>\\s*(?:<!\\[CDATA\\[)?\\s*(.*?)(?:\\]\\]>)?</\\2>\\s*</log>");
+		_logPttrn = Pattern.compile("<log>\\s*(?:<color>\\s*(.*?)\\s*</color>\\s*)?<(msg|command|tree)>\\s*(?:<!\\[CDATA\\[)?\\s*(.*?)(?:\\]\\]>)?</\\2>\\s*</log>", Pattern.DOTALL);
 
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		try {
