@@ -3,11 +3,8 @@ package com.quui.qlog.swing.gui.tab;
 import java.awt.Dimension;
 import java.io.StringReader;
 
-import javax.swing.BoundedRangeModel;
 import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.text.html.HTMLEditorKit;
 
 import com.quui.qlog.core.Filter;
@@ -15,6 +12,7 @@ import com.quui.qlog.core.PropertiesReader;
 import com.quui.qlog.core.TableBuilder;
 import com.quui.qlog.swing.gui.Window;
 import com.quui.qlog.swing.gui.popup.FontSizePopUp;
+import com.quui.qlog.swing.gui.tab.AutoScrollHelper.OnScrollListener;
 import com.quui.utils.util.IDestroyable;
 
 
@@ -25,8 +23,7 @@ public class Tab implements ITab {
 	private IDestroyable _client;
 	private String _name;
 	private Window _window;
-	private boolean _autoScroll = true;
-	private int _lastScrollExtent = 0;
+	private boolean _isAutoScroll = true;
 
 	public Tab(final Window window, final PropertiesReader reader, final IDestroyable client, final String name) {
 		_reader = reader;
@@ -38,20 +35,10 @@ public class Tab implements ITab {
 		getEditorPane().setText(_tableBuilder.getContent());
 		_window.addTab(this);
 
-		_lastScrollExtent = _scrollPane.getVerticalScrollBar().getModel().getExtent();
-		_scrollPane.getVerticalScrollBar().getModel().addChangeListener(new ChangeListener() {
+		AutoScrollHelper.setupListener(_scrollPane, new OnScrollListener() {
 
-			public void stateChanged(ChangeEvent e) {
-				try {
-					final BoundedRangeModel m = (BoundedRangeModel)e.getSource();
-					if (_lastScrollExtent != m.getExtent()) {
-						_lastScrollExtent = m.getExtent();
-						return;
-					}
-
-					if (!m.getValueIsAdjusting())
-						_autoScroll = (m.getValue() + m.getExtent()) == m.getMaximum();
-				} catch (Exception ex) {}
+			public void onScrollListener(boolean value) {
+				_isAutoScroll = value;
 			}
 		});
 	}
@@ -90,8 +77,6 @@ public class Tab implements ITab {
 		if (newMsg == null)
 			return;
 
-		final boolean autoscroll = _autoScroll;
-
 		try {
 			final JEditorPane p = getEditorPane();
 
@@ -100,7 +85,7 @@ public class Tab implements ITab {
 						p.getDocument(),
 						p.getDocument().getLength());
 
-			if (autoscroll)
+			if (_isAutoScroll)
 				p.setCaretPosition(p.getDocument().getLength());
 
 		} catch (Exception e) {
