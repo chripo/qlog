@@ -14,6 +14,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JSeparator;
 
 import com.quui.qlog.core.PropertiesReader;
 import com.quui.qlog.swing.gui.ButtonFactory.MenuButton;
@@ -62,7 +63,7 @@ public class Window extends JFrame implements ActionListener, IListener {
 	}
 
 	private void setSelectedTab() {
-		ITab tab = _tabCtrl.getCurrentTab();
+		final ITab tab = _tabCtrl.getCurrentTab();
 
 		if (tab != null) {
 			for (IPopUp popup : _openPopUps) {
@@ -102,8 +103,7 @@ public class Window extends JFrame implements ActionListener, IListener {
 	private void createGui() {
 		createMenu();
 		setSelectedTab();
-		BorderLayout border = new BorderLayout();
-		setLayout(border);
+		setLayout(new BorderLayout());
 	}
 
 	private void createMenu() {
@@ -112,18 +112,18 @@ public class Window extends JFrame implements ActionListener, IListener {
 		menu.setMnemonic(KeyEvent.VK_M);
 		menubar.add(menu);
 
-		menu.add(ButtonFactory.create(MenuButton.CHANGE_FONTSIZE, this));
-
-		final JMenuItem clearOnConnect = menu.add(ButtonFactory.create(MenuButton.CLEAR_ON_CONNECT, this));
-		menu.add(ButtonFactory.create(MenuButton.REMOVE_ALL_TABS, this));
-		if (_clearOnConnect)
-			clearOnConnect.setIcon(_checkIcon);
-
 		final JMenuItem alwaysOnTop = menu.add(ButtonFactory.create(MenuButton.ALWAYS_ON_TOP, this));
 		if (_alwaysOnTop) {
 			setAlwaysOnTop(_alwaysOnTop);
 			alwaysOnTop.setIcon(_checkIcon);
 		}
+
+		menu.add(ButtonFactory.create(MenuButton.CHANGE_FONTSIZE, this));
+
+
+		final JMenuItem clearOnConnect = menu.add(ButtonFactory.create(MenuButton.CLEAR_ON_CONNECT, this));
+		if (_clearOnConnect)
+			clearOnConnect.setIcon(_checkIcon);
 
 		final JMenu session = new JMenu("Session");
 		session.setMnemonic(KeyEvent.VK_N);
@@ -134,9 +134,13 @@ public class Window extends JFrame implements ActionListener, IListener {
 		final JMenu tab = new JMenu("Tab");
 		tab.setMnemonic(KeyEvent.VK_B);
 		menubar.add(tab);
+
 		tab.add(ButtonFactory.create(MenuButton.CLEAR, this));
 		tab.add(ButtonFactory.create(MenuButton.FILTER, this));
-		tab.add(ButtonFactory.create(MenuButton.SAVE_LOG, this));
+		tab.add(ButtonFactory.create(MenuButton.SAVE_TAB, this));
+		tab.add(new JSeparator());
+		tab.add(ButtonFactory.create(MenuButton.CLEAR_ALL_TABS, this));
+		tab.add(ButtonFactory.create(MenuButton.REMOVE_ALL_TABS, this));
 
 		final JMenu help = new JMenu("Help");
 		menubar.add(help);
@@ -171,7 +175,7 @@ public class Window extends JFrame implements ActionListener, IListener {
 			}
 			break;
 
-		case SAVE_LOG:
+		case SAVE_TAB:
 			try {
 				new LogTabSave(this, (Tab) _tabCtrl.getCurrentTab());
 			} catch (Exception ex) {
@@ -189,6 +193,13 @@ public class Window extends JFrame implements ActionListener, IListener {
 
 		case REMOVE_ALL_TABS:
 			_tabCtrl.removeAllTabs();
+			break;
+
+		case CLEAR_ALL_TABS:
+			try {
+				for (final ITab t : _tabCtrl.getTabList())
+					t.clear();
+			} catch (Exception e) {}
 			break;
 
 		case SESSION_IMPORT:
@@ -222,7 +233,7 @@ public class Window extends JFrame implements ActionListener, IListener {
 		}
 	}
 
-	private void handleAlwaysOnTop(JMenuItem item) {
+	private void handleAlwaysOnTop(final JMenuItem item) {
 		_alwaysOnTop = !_alwaysOnTop;
 		setAlwaysOnTop(_alwaysOnTop);
 
@@ -232,7 +243,7 @@ public class Window extends JFrame implements ActionListener, IListener {
 			item.setIcon(null);
 	}
 
-	private void handleClearOnConnect(JMenuItem item) {
+	private void handleClearOnConnect(final JMenuItem item) {
 		_clearOnConnect = !_clearOnConnect;
 
 		if (_clearOnConnect)

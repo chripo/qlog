@@ -17,7 +17,7 @@ public class ButtonEnabler
 	{
 	}
 
-	public void process(ITab currentTab, List<JMenuItem> items)
+	public void process(final ITab currentTab, final List<JMenuItem> items)
 	{
 		try {
 			if(currentTab.getClass().equals(Tab.class))
@@ -31,12 +31,14 @@ public class ButtonEnabler
 
 	private void setForNullTab(List<JMenuItem> items)
 	{
-		for (JMenuItem item : items)
+		for (final JMenuItem item : items)
 			switch (MenuButton.valueOf(item.getName())) {
 			case CLEAR:
+			case CLEAR_ALL_TABS:
+			case REMOVE_ALL_TABS:
 			case FILTER:
-			case CHANGE_FONTSIZE:
-			case SAVE_LOG:
+			case SESSION_EXPORT:
+			case SAVE_TAB:
 				item.setEnabled(false);
 				break;
 			}
@@ -44,10 +46,10 @@ public class ButtonEnabler
 
 	private void setForTreeTab(List<JMenuItem> items)
 	{
-		for (JMenuItem item : items)
+		for (final JMenuItem item : items)
 			switch (MenuButton.valueOf(item.getName())) {
 			case CLEAR:
-			case SAVE_LOG:
+			case SAVE_TAB:
 				item.setEnabled(false);
 				break;
 			}
@@ -55,9 +57,7 @@ public class ButtonEnabler
 
 	private void setForTab(List<JMenuItem> items)
 	{
-		for (JMenuItem menuItem : items)
-		{
+		for (final JMenuItem menuItem : items)
 			menuItem.setEnabled(true);
-		}
 	}
 }

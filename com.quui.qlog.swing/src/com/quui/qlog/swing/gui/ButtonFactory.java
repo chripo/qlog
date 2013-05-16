@@ -15,10 +15,11 @@ public class ButtonFactory
 	enum MenuButton {
 		ABOUT,
 		CLEAR,
+		CLEAR_ALL_TABS,
 		CLEAR_ON_CONNECT,
 		FILTER,
 		ALWAYS_ON_TOP,
-		SAVE_LOG,
+		SAVE_TAB,
 		CHANGE_FONTSIZE,
 		REMOVE_ALL_TABS,
 		SESSION_EXPORT,
@@ -36,6 +37,9 @@ public class ButtonFactory
 		case CLEAR:
 			item = buildItem(id, "Clear", KeyEvent.VK_E, listener);
 			break;
+		case CLEAR_ALL_TABS:
+			item = buildItem(id, "Clear All Tabs", KeyEvent.VK_A, listener);
+			break;
 		case CLEAR_ON_CONNECT:
 			item = buildItem(id, "Clear On Connect", KeyEvent.VK_O, listener);
 			break;
@@ -43,9 +47,9 @@ public class ButtonFactory
 			item = buildItem(id, "Filter", KeyEvent.VK_F, listener);
 			break;
 		case ALWAYS_ON_TOP:
-			item = buildItem(id, "Always on top", KeyEvent.VK_T, listener);
+			item = buildItem(id, "Always On Top", KeyEvent.VK_T, listener);
 			break;
-		case SAVE_LOG:
+		case SAVE_TAB:
 			item = buildItem(id, "Save", KeyEvent.VK_S, listener);
 			break;
 		case CHANGE_FONTSIZE:
@@ -61,10 +65,13 @@ public class ButtonFactory
 			item = buildItem(id, "Export", KeyEvent.VK_X, listener);
 			break;
 		default:
-			System.out.println("No Button available for id " + id);
+			System.err.println("No Button available for id " + id);
+			return null;
 		}
 
-		if(item != null) _items.add(item);
+		try {
+			_items.add(item);
+		} catch (Exception e) {}
 
 		return item;
 	}
@@ -72,7 +79,7 @@ public class ButtonFactory
 	private static JMenuItem buildItem(final MenuButton id, final String title, final int keyEvent,
 			final ActionListener listener)
 	{
-		JMenuItem item = new JMenuItem(title, keyEvent);
+		final JMenuItem item = new JMenuItem(title, keyEvent);
 		item.setAccelerator(KeyStroke.getKeyStroke("control "
 				+ String.valueOf(((char)(keyEvent))).toUpperCase()));
 		item.setActionCommand(id.toString());
