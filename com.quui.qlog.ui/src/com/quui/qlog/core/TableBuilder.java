@@ -10,7 +10,7 @@ public class TableBuilder
 
 	public TableBuilder(final int fontSizePX)
 	{
-		_fontSizeEM = toEm(fontSizePX);
+		changeFontSize(fontSizePX);
 		setFilter("");
 	}
 
