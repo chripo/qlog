@@ -112,36 +112,37 @@ public class Window extends JFrame implements ActionListener, IListener {
 		menu.setMnemonic(KeyEvent.VK_M);
 		menubar.add(menu);
 
-		final JMenu session = new JMenu("Session");
-		menubar.add(session);
-		session.add(ButtonFactory.create(MenuButton.SESSION_IMPORT, this));
-		session.add(ButtonFactory.create(MenuButton.SESSION_EXPORT, this));
+		menu.add(ButtonFactory.create(MenuButton.CHANGE_FONTSIZE, this));
 
-		final JMenu window = new JMenu("Window");
-		window.setMnemonic(KeyEvent.VK_W);
-		menubar.add(window);
-
-		final JMenu help = new JMenu("Help");
-		help.setMnemonic(KeyEvent.VK_H);
-		menubar.add(help);
-
-		help.add(ButtonFactory.create(MenuButton.ABOUT, this));
-		menu.add(ButtonFactory.create(MenuButton.CLEAR, this));
-		final JMenuItem clearOnConnect = menu.add(ButtonFactory.create(MenuButton.CLEAR_ON_CONNECT,
-				this));
-		menu.add(ButtonFactory.create(MenuButton.FILTER, this));
+		final JMenuItem clearOnConnect = menu.add(ButtonFactory.create(MenuButton.CLEAR_ON_CONNECT, this));
 		menu.add(ButtonFactory.create(MenuButton.REMOVE_ALL_TABS, this));
-		final JMenuItem alwaysOnTop = window.add(ButtonFactory.create(MenuButton.ALWAYS_ON_TOP, this));
-		window.add(ButtonFactory.create(MenuButton.SAVE_LOG, this));
-		window.add(ButtonFactory.create(MenuButton.CHANGE_FONTSIZE, this));
-		setJMenuBar(menubar);
-
 		if (_clearOnConnect)
 			clearOnConnect.setIcon(_checkIcon);
+
+		final JMenuItem alwaysOnTop = menu.add(ButtonFactory.create(MenuButton.ALWAYS_ON_TOP, this));
 		if (_alwaysOnTop) {
 			setAlwaysOnTop(_alwaysOnTop);
 			alwaysOnTop.setIcon(_checkIcon);
 		}
+
+		final JMenu session = new JMenu("Session");
+		session.setMnemonic(KeyEvent.VK_N);
+		menubar.add(session);
+		session.add(ButtonFactory.create(MenuButton.SESSION_IMPORT, this));
+		session.add(ButtonFactory.create(MenuButton.SESSION_EXPORT, this));
+
+		final JMenu tab = new JMenu("Tab");
+		tab.setMnemonic(KeyEvent.VK_B);
+		menubar.add(tab);
+		tab.add(ButtonFactory.create(MenuButton.CLEAR, this));
+		tab.add(ButtonFactory.create(MenuButton.FILTER, this));
+		tab.add(ButtonFactory.create(MenuButton.SAVE_LOG, this));
+
+		final JMenu help = new JMenu("Help");
+		menubar.add(help);
+		help.add(ButtonFactory.create(MenuButton.ABOUT, this));
+
+		setJMenuBar(menubar);
 	}
 
 	/**

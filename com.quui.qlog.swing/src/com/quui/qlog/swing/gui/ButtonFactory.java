@@ -31,7 +31,7 @@ public class ButtonFactory
 		switch (id)
 		{
 		case ABOUT:
-			item = buildItem(id, "About", KeyEvent.VK_A, listener);
+			item = buildItem(id, "About", KeyEvent.VK_U, listener);
 			break;
 		case CLEAR:
 			item = buildItem(id, "Clear", KeyEvent.VK_E, listener);
@@ -46,7 +46,7 @@ public class ButtonFactory
 			item = buildItem(id, "Always on top", KeyEvent.VK_T, listener);
 			break;
 		case SAVE_LOG:
-			item = buildItem(id, "Save Logfile", KeyEvent.VK_S, listener);
+			item = buildItem(id, "Save", KeyEvent.VK_S, listener);
 			break;
 		case CHANGE_FONTSIZE:
 			item = buildItem(id, "Change Fontsize", KeyEvent.VK_P, listener);
@@ -58,7 +58,7 @@ public class ButtonFactory
 			item = buildItem(id, "Import", KeyEvent.VK_I, listener);
 			break;
 		case SESSION_EXPORT:
-			item = buildItem(id, "Export", KeyEvent.VK_Y, listener);
+			item = buildItem(id, "Export", KeyEvent.VK_X, listener);
 			break;
 		default:
 			System.out.println("No Button available for id " + id);
