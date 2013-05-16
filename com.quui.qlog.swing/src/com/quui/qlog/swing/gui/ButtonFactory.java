@@ -20,7 +20,6 @@ public class ButtonFactory
 		ALWAYS_ON_TOP,
 		SAVE_LOG,
 		CHANGE_FONTSIZE,
-		SCROLL_LOCK,
 		REMOVE_ALL_TABS,
 		SESSION_EXPORT,
 		SESSION_IMPORT
@@ -51,9 +50,6 @@ public class ButtonFactory
 			break;
 		case CHANGE_FONTSIZE:
 			item = buildItem(id, "Change Fontsize", KeyEvent.VK_P, listener);
-			break;
-		case SCROLL_LOCK:
-			item = buildItem(id, "Scroll Lock", KeyEvent.VK_L, listener);
 			break;
 		case REMOVE_ALL_TABS:
 			item = buildItem(id, "Remove All Tabs", KeyEvent.VK_R, listener);

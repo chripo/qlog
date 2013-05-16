@@ -91,11 +91,4 @@ public class PropertiesReader {
 		} catch (Exception e) {}
 		return 16;
 	}
-
-	public boolean getScrollLock() {
-		try {
-			return _document.getElementsByTagName("scrolllock").item(0).getTextContent().equals("true");
-		} catch (Exception e) {}
-		return true;
-	}
 }

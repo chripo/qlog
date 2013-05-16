@@ -16,8 +16,6 @@ public interface ITab
 
 	public String getName();
 
-	public void setScrollLock(boolean lock);
-
 	public void applyFilter(String filter);
 
 	public String getFilter();

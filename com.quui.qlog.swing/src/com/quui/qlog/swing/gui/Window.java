@@ -36,7 +36,6 @@ public class Window extends JFrame implements ActionListener, IListener {
 	private List<IPopUp> _openPopUps = new ArrayList<IPopUp>();
 	private boolean _clearOnConnect;
 	private boolean _alwaysOnTop;
-	private boolean _scrollLock;
 	private TabController _tabCtrl;
 	private ButtonEnabler _enabler;
 
@@ -45,7 +44,6 @@ public class Window extends JFrame implements ActionListener, IListener {
 
 		_clearOnConnect = reader.getClearOnConnect();
 		_alwaysOnTop = reader.getAlwaysOnTop();
-		_scrollLock = reader.getScrollLock();
 
 		setTitle("QLog");
 
@@ -67,7 +65,6 @@ public class Window extends JFrame implements ActionListener, IListener {
 		ITab tab = _tabCtrl.getCurrentTab();
 
 		if (tab != null) {
-			tab.setScrollLock(_scrollLock);
 			for (IPopUp popup : _openPopUps) {
 				popup.setCurrentTab(tab);
 				if (popup.getClass().equals(FilterPopUp.class)) {
@@ -137,16 +134,10 @@ public class Window extends JFrame implements ActionListener, IListener {
 		final JMenuItem alwaysOnTop = window.add(ButtonFactory.create(MenuButton.ALWAYS_ON_TOP, this));
 		window.add(ButtonFactory.create(MenuButton.SAVE_LOG, this));
 		window.add(ButtonFactory.create(MenuButton.CHANGE_FONTSIZE, this));
-		JMenuItem scrollLock = window.add(ButtonFactory.create(MenuButton.SCROLL_LOCK, this));
 		setJMenuBar(menubar);
 
 		if (_clearOnConnect)
 			clearOnConnect.setIcon(_checkIcon);
-		if (_scrollLock) {
-			scrollLock.setIcon(_checkIcon);
-			if (_tabCtrl.getCurrentTab() != null)
-				_tabCtrl.getCurrentTab().setScrollLock(_scrollLock);
-		}
 		if (_alwaysOnTop) {
 			setAlwaysOnTop(_alwaysOnTop);
 			alwaysOnTop.setIcon(_checkIcon);
@@ -226,9 +217,7 @@ public class Window extends JFrame implements ActionListener, IListener {
 			handleClearOnConnect((JMenuItem) evt.getSource());
 			break;
 
-		case SCROLL_LOCK:
-			handleScrollLock((JMenuItem) evt.getSource());
-			break;
+		default: break;
 		}
 	}
 
@@ -246,17 +235,6 @@ public class Window extends JFrame implements ActionListener, IListener {
 		_clearOnConnect = !_clearOnConnect;
 
 		if (_clearOnConnect)
-			item.setIcon(_checkIcon);
-		else
-			item.setIcon(null);
-	}
-
-	private void handleScrollLock(JMenuItem item) {
-		_scrollLock = !_scrollLock;
-		if (_tabCtrl.getCurrentTab() != null)
-			_tabCtrl.getCurrentTab().setScrollLock(_scrollLock);
-
-		if (_scrollLock)
 			item.setIcon(_checkIcon);
 		else
 			item.setIcon(null);
