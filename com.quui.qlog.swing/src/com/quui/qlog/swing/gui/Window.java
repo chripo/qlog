@@ -110,31 +110,31 @@ public class Window extends JFrame implements ActionListener, IListener {
 	}
 
 	private void createMenu() {
-		JMenuBar menubar = new JMenuBar();
-		JMenu menu = new JMenu("Menu");
+		final JMenuBar menubar = new JMenuBar();
+		final JMenu menu = new JMenu("Menu");
 		menu.setMnemonic(KeyEvent.VK_M);
 		menubar.add(menu);
 
-		JMenu session = new JMenu("Session");
+		final JMenu session = new JMenu("Session");
 		menubar.add(session);
 		session.add(ButtonFactory.create(MenuButton.SESSION_IMPORT, this));
 		session.add(ButtonFactory.create(MenuButton.SESSION_EXPORT, this));
 
-		JMenu window = new JMenu("Window");
+		final JMenu window = new JMenu("Window");
 		window.setMnemonic(KeyEvent.VK_W);
 		menubar.add(window);
 
-		JMenu help = new JMenu("Help");
+		final JMenu help = new JMenu("Help");
 		help.setMnemonic(KeyEvent.VK_H);
 		menubar.add(help);
 
 		help.add(ButtonFactory.create(MenuButton.ABOUT, this));
 		menu.add(ButtonFactory.create(MenuButton.CLEAR, this));
-		JMenuItem clearOnConnect = menu.add(ButtonFactory.create(MenuButton.CLEAR_ON_CONNECT,
+		final JMenuItem clearOnConnect = menu.add(ButtonFactory.create(MenuButton.CLEAR_ON_CONNECT,
 				this));
 		menu.add(ButtonFactory.create(MenuButton.FILTER, this));
 		menu.add(ButtonFactory.create(MenuButton.REMOVE_ALL_TABS, this));
-		JMenuItem alwaysOnTop = window.add(ButtonFactory.create(MenuButton.ALWAYS_ON_TOP, this));
+		final JMenuItem alwaysOnTop = window.add(ButtonFactory.create(MenuButton.ALWAYS_ON_TOP, this));
 		window.add(ButtonFactory.create(MenuButton.SAVE_LOG, this));
 		window.add(ButtonFactory.create(MenuButton.CHANGE_FONTSIZE, this));
 		JMenuItem scrollLock = window.add(ButtonFactory.create(MenuButton.SCROLL_LOCK, this));
