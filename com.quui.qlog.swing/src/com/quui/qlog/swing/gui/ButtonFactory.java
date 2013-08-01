@@ -38,7 +38,7 @@ public class ButtonFactory
 			item = buildItem(id, "Clear", KeyEvent.VK_E, listener);
 			break;
 		case CLEAR_ALL_TABS:
-			item = buildItem(id, "Clear All Tabs", KeyEvent.VK_A, listener);
+			item = buildItem(id, "Clear All Tabs", KeyEvent.VK_W, listener);
 			break;
 		case CLEAR_ON_CONNECT:
 			item = buildItem(id, "Clear On Connect", KeyEvent.VK_O, listener);
