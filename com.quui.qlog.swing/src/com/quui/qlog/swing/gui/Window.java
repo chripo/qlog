@@ -1,6 +1,7 @@
 package com.quui.qlog.swing.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -197,8 +198,13 @@ public class Window extends JFrame implements ActionListener, IListener {
 
 		case CLEAR_ALL_TABS:
 			try {
-				for (final ITab t : _tabCtrl.getTabList())
+				final List<ITab> list = _tabCtrl.getTabList();
+				int idx = list.size();
+				while (--idx >= 0) {
+					final ITab t = list.get(idx);
 					t.clear();
+					_tabCtrl.getJTabbedPane().setBackgroundAt(idx, Color.LIGHT_GRAY);
+				}
 			} catch (Exception e) {}
 			break;
 
