@@ -21,7 +21,9 @@ import javax.swing.plaf.basic.BasicButtonUI;
  */
 
 public class TabBtnComp extends JPanel {
+	private static final long serialVersionUID = 1L;
 	private JButton btn = null;
+	private JLabel label;
 
 	public TabBtnComp(String title) {
 		super(new FlowLayout(FlowLayout.LEFT, 0, 0));
@@ -29,10 +31,14 @@ public class TabBtnComp extends JPanel {
 
 		add( btn = new Btn() );
 
-		JLabel label = new JLabel(title);
+		label = new JLabel(title);
 		add(label);
 		label.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
 		setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0));
+	}
+
+	public void setTile(final String text) {
+		label.setText(text);
 	}
 
 	public void addActionListener(ActionListener lstnr) {

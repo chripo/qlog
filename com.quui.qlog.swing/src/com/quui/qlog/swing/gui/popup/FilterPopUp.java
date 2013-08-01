@@ -16,6 +16,7 @@ import javax.swing.JTextField;
 
 import com.quui.qlog.swing.gui.Window;
 import com.quui.qlog.swing.gui.tab.ITab;
+import com.quui.qlog.swing.gui.tab.TabController;
 
 
 public class FilterPopUp implements ActionListener, IPopUp, WindowListener, KeyListener
@@ -24,11 +25,13 @@ public class FilterPopUp implements ActionListener, IPopUp, WindowListener, KeyL
 	private JTextField _tf;
 	private Window _parent;
 	private JFrame _frame;
+	private TabController _tc;
 
-	public FilterPopUp(Window parent, ITab currentTab)
+	public FilterPopUp(Window parent, ITab currentTab, TabController tc)
 	{
 		_parent = parent;
 		_currentTab = currentTab;
+		_tc = tc;
 
 		Dimension size = new Dimension(320, 100);
 		JPanel content = new JPanel();
@@ -54,7 +57,9 @@ public class FilterPopUp implements ActionListener, IPopUp, WindowListener, KeyL
 
 	public void actionPerformed(ActionEvent e)
 	{
-		_currentTab.applyFilter(_tf.getText());
+		final String filter = _tf.getText();
+		_currentTab.applyFilter(filter);
+		_tc.updateTitle(_currentTab, (filter.length() != 0 ? "[" + filter +"] " : "") + _currentTab.getName());
 	}
 
 	public void setCurrentTab(ITab currentTab)

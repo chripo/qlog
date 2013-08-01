@@ -170,7 +170,7 @@ public class Window extends JFrame implements ActionListener, IListener {
 
 		case FILTER:
 			try {
-				new FilterPopUp(this, _tabCtrl.getCurrentTab());
+				new FilterPopUp(this, _tabCtrl.getCurrentTab(), _tabCtrl);
 			} catch (Exception ex) {
 				MessagePane.createTabErrorDialog(this);
 			}

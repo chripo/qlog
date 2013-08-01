@@ -123,4 +123,11 @@ public class TabController extends Distributor implements ActionListener, Change
 	public void actionPerformed(ActionEvent e) {
 		removeTab(_tabPane.indexOfTabComponent(((JButton)e.getSource()).getParent()));
 	}
+
+	public void updateTitle(final ITab tab, final String text) {
+		try {
+			final int idx = getTabIndex(tab);
+			((TabBtnComp)_tabPane.getTabComponentAt(idx)).setTile(text);
+		} catch (Exception e){}
+	}
 }
