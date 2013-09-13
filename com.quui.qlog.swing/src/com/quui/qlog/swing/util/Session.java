@@ -1,14 +1,18 @@
 package com.quui.qlog.swing.util;
 
 import java.awt.Window;
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.GZIPInputStream;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -70,7 +74,7 @@ public class Session {
 							JOptionPane.QUESTION_MESSAGE))
 					return;
 
-				new FileSaver(c.toString(), fc.getSelectedFile().getAbsolutePath());
+				FileSaver.write(c, fc.getSelectedFile(), true);
 			}
 		}
 	}
@@ -88,10 +92,12 @@ public class Session {
 			}
 
 			@Override
-			public boolean accept(File f) {
+			public boolean accept(final File f) {
+				if (f.isDirectory())
+					return true;
 				try {
 					final String ext = f.getName().substring(f.getName().length() - 3).toLowerCase();
-					return "htm".equals(ext) || "tml".equals(ext);
+					return "htm".equals(ext) || "tml".equals(ext) || ".gz".equals(ext);
 				} catch (Exception ex) {}
 
 				return false;
@@ -123,7 +129,10 @@ public class Session {
 
 			BufferedReader r = null;
 			try {
-				r = new BufferedReader(new FileReader(file));
+				if (file.getName().endsWith("gz"))
+					r = new BufferedReader(new InputStreamReader(new GZIPInputStream(new BufferedInputStream(new FileInputStream(file))), "UTF-8"));
+				else
+					r = new BufferedReader(new FileReader(file));
 				String line;
 				Matcher tm, mm;
 				ITab tab = null;
