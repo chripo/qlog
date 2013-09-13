@@ -34,7 +34,6 @@ public final class QuuiLogView extends ViewPart {
 	private PropertiesReader reader;
 	private String allHtml = "";
 	private Server server;
-	private String filter;
 	private Action restartAction;
 	private boolean locked;
 
@@ -167,8 +166,8 @@ public final class QuuiLogView extends ViewPart {
 				InputDialog d = new InputDialog(getSite().getShell(), "Filter",
 						"Filter", "", null);
 				d.open();
-				filter = d.getValue();
-				String matches = Filter.find(filter, tableBuilder);
+				tableBuilder.setFilter(d.getValue());
+				String matches = Filter.find(tableBuilder);
 				allHtml = matches;
 				browser.setText(allHtml);
 				scrollDown();
