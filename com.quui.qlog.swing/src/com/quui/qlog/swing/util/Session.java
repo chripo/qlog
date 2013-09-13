@@ -29,16 +29,31 @@ import com.quui.utils.util.IDestroyable;
 
 public class Session {
 
+	public interface ITabFilter {
+		boolean filter(final ITab tab);
+	}
+
 	static String STYLE = "<style type='text/css'>/*<![CDATA[*/\n"
 + " body { background-color: #efefef; }\n"
 + " h1, h2 { color: #333; }\n"
 + " .qtab { border: 1px solid #999; padding: 1em; margin-bottom: 2.6em; background-color: #fff; }\n"
 + "/*]]>*/</style>\n";
 
-	static public void export(final Window wnd, final List<ITab> tabs) {
+	static public final void export(final Window wnd, final List<ITab> tabs) {
+		export(wnd, tabs, new ITabFilter() {
+
+			public boolean filter(final ITab tab) {
+				return false;
+			}
+		});
+	}
+
+	static public final void export(final Window wnd, final List<ITab> tabs, final ITabFilter filter) {
 
 		final StringBuilder c = new StringBuilder();
 		for (final ITab t : tabs) {
+			if (filter.filter(t))
+				continue;
 			c.append("<h2>" + t.getName() + "</h2>\n");
 			c.append("<div class='qtab' id='" + t.getName().replace('\'', '"') +"'>\n");
 			c.append( ((Tab)t).getTableBuilder().getContent() );

@@ -24,10 +24,10 @@ import com.quui.qlog.swing.gui.popup.FontSizePopUp;
 import com.quui.qlog.swing.gui.popup.IPopUp;
 import com.quui.qlog.swing.gui.popup.MessagePane;
 import com.quui.qlog.swing.gui.tab.ITab;
-import com.quui.qlog.swing.gui.tab.Tab;
 import com.quui.qlog.swing.gui.tab.TabController;
 import com.quui.qlog.swing.gui.tab.TabControllerEvent;
 import com.quui.qlog.swing.util.Session;
+import com.quui.qlog.swing.util.Session.ITabFilter;
 import com.quui.utils.event.IEvent;
 import com.quui.utils.event.IListener;
 
@@ -178,9 +178,14 @@ public class Window extends JFrame implements ActionListener, IListener {
 
 		case SAVE_TAB:
 			try {
-				new LogTabSave(this, (Tab) _tabCtrl.getCurrentTab());
+				Session.export(this, _tabCtrl.getTabList(), new ITabFilter() {
+
+					public boolean filter(final ITab tab) {
+						return tab != _tabCtrl.getCurrentTab();
+					}
+				});
 			} catch (Exception ex) {
-				MessagePane.createTreeTabErrorDialog(this);
+				MessagePane.createTabErrorDialog(this);
 			}
 			break;
 
