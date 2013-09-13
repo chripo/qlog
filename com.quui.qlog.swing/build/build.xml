@@ -1,22 +1,79 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="create_run_jar" name="qlog-create-swing-jar" basedir="..">
+<project default="all" name="qlog-create-swing-jar" basedir="..">
 	<!--this file was created by Eclipse Runnable JAR Export Wizard-->
 	<!--ANT 1.7 is required                                        -->
-	<target name="create_run_jar">
-		<jar destfile="${basedir}/deploy/org.splink.qlog-1.2.jar" filesetmanifest="mergewithoutmain">
+
+	<property file="${basedir}/build.properties"/>
+
+	<property name="p"          value="${basedir}"/>
+	<property name="p.libs"     value="${p}/../com.quui.utils/dependencies"/>
+	<property name="p.bin"      value="${p}/bin"/>
+	<property name="p.out"      value="${p}/deploy"/>
+	<property name="p.jar"      value="${p.out}/org.splink.qlog-${version}.jar"/>
+
+	<target name="all" depends="clean,compile,build"/>
+
+	<target name="clean">
+		<delete includeemptydirs="true">
+			<fileset dir="${p.bin}" includes="**/*"/>
+			<fileset dir="${p.out}" includes="**/*"/>
+		</delete>
+	</target>
+
+	<path id="master-classpath">
+		<fileset dir="${p.libs}">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+
+	<target name="buildinfo">
+		<echo file="${p}/src/com/quui/qlog/BuildInfo.java">
+package com.quui.qlog;
+
+public class BuildInfo {
+	public static final String VERSION = "${version}";
+}
+		</echo>
+	</target>
+
+	<target name="compile" depends="buildinfo">
+		<javac
+			destdir="${p.bin}"
+			includeAntRuntime="false"
+			>
+
+			<classpath refid="master-classpath" />
+
+			<src path="${p}/src" />
+			<src path="${p}/../com.quui.server/src" />
+			<src path="${p}/../com.quui.utils/src" />
+			<src path="${p}/../com.quui.qlog.ui/src" />
+		</javac>
+
+	</target>
+
+	<target name="build">
+		<jar destfile="${p.jar}" filesetmanifest="mergewithoutmain">
 			<manifest>
 				<attribute name="Built-By" value="${user.name}"/>
 				<attribute name="Main-Class" value="com.quui.qlog.swing.Application"/>
 				<attribute name="Class-Path" value="."/>
+				<attribute name="Version" value="${version}"/>
 			</manifest>
-			<fileset dir="${basedir}/../com.quui.utils/bin"/>
-			<zipfileset excludes="META-INF/*.SF" src="${basedir}/../com.quui.utils/dependencies/log4j-1.2.15.jar"/>
-			<zipfileset excludes="META-INF/*.SF" src="${basedir}/../com.quui.utils/dependencies/jdom.jar"/>
-			<zipfileset excludes="META-INF/*.SF" src="${basedir}/../com.quui.utils/dependencies/commons-lang-2.4.jar"/>
-<!--            <zipfileset excludes="META-INF/*.SF" src="${basedir}/../com.quui.utils/dependencies/junit-4.6.jar"/> -->
-			<fileset dir="${basedir}/../com.quui.server/bin"/>
-			<fileset dir="${basedir}/../com.quui.qlog.ui/bin"/>
-			<fileset dir="${basedir}/../com.quui.qlog.swing/bin"/>
+
+			<zipfileset excludes="META-INF/*.SF" src="${p}/../com.quui.utils/dependencies/log4j-1.2.15.jar"/>
+			<zipfileset excludes="META-INF/*.SF" src="${p}/../com.quui.utils/dependencies/jdom.jar"/>
+			<zipfileset excludes="META-INF/*.SF" src="${p}/../com.quui.utils/dependencies/commons-lang-2.4.jar"/>
+
+			<fileset dir="${p.bin}"/>
 		</jar>
+	</target>
+
+	<target name="run">
+		<java
+			jar="${p.jar}"
+			dir="${p}"
+			fork="true"
+			/>
 	</target>
 </project>

@@ -4,6 +4,9 @@ import java.awt.Window;
 
 import javax.swing.JOptionPane;
 
+import com.quui.qlog.BuildInfo;
+
+
 
 public class MessagePane
 {
@@ -31,7 +34,7 @@ public class MessagePane
 	public static void createInfoDialog(Window parent)
 	{
 		JOptionPane.showMessageDialog(parent,
-			"QLog 1.2\r\n\r\nCopyright Max Kugland\r\nhttp://www.splink.org\r\n\r\nUpdate by\r\nChristoph Polcin\r\nhttp://www.polcin.de",
+			"QLog " + BuildInfo.VERSION + "\r\n\r\nCopyright Max Kugland\r\nhttp://www.splink.org\r\n\r\nUpdate by\r\nChristoph Polcin\r\nhttp://www.polcin.de",
 			"QLog", JOptionPane.INFORMATION_MESSAGE);
 	}
 }

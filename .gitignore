@@ -2,3 +2,4 @@
 com.quui.qlog.swing/deploy/*
 config.xml
 bin
+com.quui.qlog.swing/src/com/quui/qlog/BuildInfo.java
